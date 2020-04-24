@@ -2,7 +2,7 @@
 Nós,
 
 // Jader Gedeon de Oliveira Rocha
-// Pedro (Dps completa teu nome...)
+// Pedro Henrique Sueiro Pereira
 
 declaramos que
 
