@@ -1,6 +1,6 @@
 class IslandsInfo:
 
-    def __init__(self, matrixIlha, tamanhoXilha, tamanhoYilha):
+    def __init__(self, matrixIlha, comprimentoIlha, alturaIlha):
         self.matrixIlha = matrixIlha
-        self.tamanhoXilha = tamanhoXilha
-        self.tamanhoYilha = tamanhoYilha
+        self.comprimentoIlha = comprimentoIlha
+        self.alturaIlha = alturaIlha

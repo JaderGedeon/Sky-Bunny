@@ -14,8 +14,9 @@ não realizamos quaisquer outras atividades desonestas para nos beneficiar ou pr
 
 import src.MapGenerator as MG
 
-oi = MG.MapGenerator(200,100)
+oi = MG.MapGenerator(20,20)
 oi.inicializarIlhas()
 oi.popularMapa()
+
 
 print('Hello Bunny')
