@@ -1,8 +1,22 @@
 import os
-import src.IslandInfo as IslInf
 import random
+import pygame
+
+import src.TileInfo as TileInfo
 
 # Cada unidade de medida se refere a um Tile
+
+# Dicionário de texturas
+#
+#     0 = Céu
+#     1 = Terra
+#
+
+class IslandsInfo:
+    def __init__(self, matrixIlha, comprimentoIlha, alturaIlha):
+        self.matrixIlha = matrixIlha
+        self.comprimentoIlha = comprimentoIlha
+        self.alturaIlha = alturaIlha
 
 class MapGenerator:
     mapa = []
@@ -11,9 +25,6 @@ class MapGenerator:
     dimensoesIlha = {
         "maiorComprimento": 0,
         "maiorAltura": 0,
-
-        "menorComprimento": 0,
-        "menorAltura": 0
     }
 
     def __init__(self, comprimento, altura):
@@ -21,7 +32,8 @@ class MapGenerator:
         self.altura = altura
 
         # Cria um mapa com tamanho X e Y baseados nos valores de inicialização
-        self.mapa = [['_' for x in range(comprimento)] for y in range(altura)]
+        self.mapa = [[TileInfo.Tile(0,0) for x in range(comprimento)] for y in range(altura)]
+
 
     def inicializarIlhas(self):
         # Lê todos os arquivos de Presets/Islands/
@@ -39,28 +51,22 @@ class MapGenerator:
             if len(matrixIlha[0]) > self.dimensoesIlha["maiorComprimento"]:
                 self.dimensoesIlha["maiorComprimento"] = len(matrixIlha[0])
 
-            elif len(matrixIlha[0]) < self.dimensoesIlha["menorComprimento"] or self.dimensoesIlha["menorComprimento"] == 0:
-                self.dimensoesIlha["menorComprimento"] = len(matrixIlha[0])
-
             if len(matrixIlha) > self.dimensoesIlha["maiorAltura"]:
                 self.dimensoesIlha["maiorAltura"] = len(matrixIlha)
 
-            elif len(matrixIlha) < self.dimensoesIlha["menorAltura"] or self.dimensoesIlha["menorAltura"] == 0:
-                self.dimensoesIlha["menorAltura"] = len(matrixIlha)
-
 
             # Inicializa e da append num novo objeto de ilha baseada nas informações do txt (Matrix,TamanhoX,TamanhoY)
-            self.listaDeIlhas.append(IslInf.IslandsInfo(matrixIlha,len(matrixIlha[0]),len(matrixIlha)))
+            self.listaDeIlhas.append(IslandsInfo(matrixIlha,len(matrixIlha[0]),len(matrixIlha)))
 
     def popularMapa(self):
 
-        frase = ""
+        identificadorDeIlhas = 0
 
         # Da o full scan no mapa para começar a populá-lo
         for i in range(len(self.mapa)):
             for j in range(len(self.mapa[0])):
 
-                if self.mapa[i][j] == '_':
+                if self.mapa[i][j].texturaDoTile == 0:
 
                     espacoLivre = {
                         "comprimento": 0,
@@ -73,13 +79,13 @@ class MapGenerator:
 
                     while j + espacoLivre["comprimento"] < len(self.mapa[0]) and\
                             espacoLivre["comprimento"] < self.dimensoesIlha["maiorComprimento"] and\
-                            self.mapa[i][j + espacoLivre["comprimento"]] == '_':
+                            self.mapa[i][j + espacoLivre["comprimento"]].texturaDoTile == 0:
 
                         espacoLivre["comprimento"] += 1
 
                     while i + espacoLivre["altura"] < len(self.mapa) and\
                             espacoLivre["altura"] < self.dimensoesIlha["maiorAltura"] and\
-                            self.mapa[i + espacoLivre["altura"]][j] == '_':
+                            self.mapa[i + espacoLivre["altura"]][j].texturaDoTile == 0:
 
                         espacoLivre["altura"] += 1
 
@@ -89,22 +95,20 @@ class MapGenerator:
                     # Procura a primeira ilha no array de ilhas que encaixe no espaço livre
                     for ilha in self.listaDeIlhas:
                         if ilha.comprimentoIlha <= espacoLivre["comprimento"] and ilha.alturaIlha <= espacoLivre["altura"]:
-                            #Caso for adicionar algo para saber qual é cada ilha, adicionar aqui!
+                            identificadorDeIlhas += 1
                             for iIlha in range(ilha.alturaIlha):
                                 for jIlha in range(ilha.comprimentoIlha):
-                                    self.mapa[i+iIlha][j+jIlha] = ilha.matrixIlha[iIlha][jIlha]
-
+                                    if ilha.matrixIlha[iIlha][jIlha] != 0:
+                                        self.mapa[i+iIlha][j+jIlha].idIlha = identificadorDeIlhas
+                                        self.mapa[i + iIlha][j + jIlha].texturaDoTile = ilha.matrixIlha[iIlha][jIlha]
                             break
 
-                    # Caso não tenha conseguido preencher com uma ilha, troca pra céu
-                    if self.mapa[i][j] == '_':
-                        self.mapa[i][j] = '.'
+    def texturizarMapa(self):
 
-
-                frase += "%s " % (self.mapa[i][j])
-            frase += "\n"
-        print(frase)
+        for i in range(len(self.mapa)):
+            for j in range(len(self.mapa[0])):
+                pass
 
     def reiniciarMapa(self):
-        self.mapa = [['_' for x in range(self.comprimento)] for y in range(self.altura)]
+        self.mapa = [[TileInfo.Tile(0,0) for x in range(self.comprimento)] for y in range(self.altura)]
         MapGenerator.popularMapa(self)
