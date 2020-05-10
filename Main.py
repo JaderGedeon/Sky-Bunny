@@ -12,33 +12,35 @@ não disponibilizamos nossas respostas para colegas externos à equipe e
 não realizamos quaisquer outras atividades desonestas para nos beneficiar ou prejudicar outros.
 """
 
-import src.MapGenerator as MG
+import src.GeradorDeMapa as MG
 import pygame as pg
+import sys
 import random
 
 pg.init()
 
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-GREEN = (0, 255, 0)
-PINK = (255,218,255)
-RED = (255, 0, 0)
-
-WIDTH = 9
-HEIGHT = 9
-
-MARGIN = 0
-
-oi = MG.MapGenerator(130,65)
+oi = MG.MapGenerator(50,50)
 oi.inicializarIlhas()
 oi.popularMapa()
+oi.texturizarMapa()
 
-WINDOW_SIZE = [1366, 768]
+TamanhoTile = oi.texturizador.tamanhoTexturas
+
+WINDOW_SIZE = [1280, 600]
 screen = pg.display.set_mode(WINDOW_SIZE)
 
 pg.display.set_caption("RODA MEU DEUS")
 
 JogoAtivo = True
+
+def Desenhar():
+    oi.texturizarMapa()
+    for i in range(len(oi.mapa)):
+        for j in range(len(oi.mapa[0])):
+            screen.blit(oi.mapa[i][j].texturaDoTile,(j*TamanhoTile,i*TamanhoTile))
+
+font = pg.font.Font(None, 30)
+clock = pg.time.Clock()
 
 while JogoAtivo:
     for event in pg.event.get():  # User did something
@@ -47,19 +49,9 @@ while JogoAtivo:
         if event.type == pg.KEYDOWN:
             if event.key == pg.K_h:
                 oi.reiniciarMapa()
+                Desenhar()
     # Set the screen background
-    screen.fill(BLACK)
-
-    # Draw the grid
-    for i in range(len(oi.mapa)):
-        for j in range(len(oi.mapa[0])):
-
-            if oi.mapa[i][j].texturaDoTile == '1':
-                color = GREEN
-            elif oi.mapa[i][j].texturaDoTile == '0':
-                color = PINK
-
-            pg.draw.rect(screen, color, [(MARGIN + WIDTH) * j + MARGIN, (MARGIN + HEIGHT) * i + MARGIN, WIDTH, HEIGHT])
-
-    # Go ahead and update the screen with what we've drawn.
+    #screen.fill(BLACK)
+    pg.display.set_caption(str(int(clock.get_fps())))
+    clock.tick(60)
     pg.display.flip()
