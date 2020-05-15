@@ -1,1 +1,0 @@
-print('Um dia sai')
