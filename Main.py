@@ -277,9 +277,9 @@ while JogoAtivo:
         for i in range(len(oi.mapa)-10):
             for j in range(len(oi.mapa[0])-10):
                 screen.blit(oi.mapa[i][j].texturaDoTile, (j * TamanhoTile, i * TamanhoTile))
-                       # =================================
-                       elementos.coelho.dashEvento(evento)
-                       elementos.coelho.puloCarregado(evento)
+                # =================================
+                elementos.coelho.dashEvento(event)
+                elementos.coelho.puloCarregado(event)
     
     elementos.coelho.vida()
     elementos.coelho.movimentoBasico()
@@ -287,7 +287,7 @@ while JogoAtivo:
 
     elementos.hit()
 
-    elementos.spritesGerais.draw(tela)
+    elementos.spritesGerais.draw(screen)
     # ===================================
 
     screen.blit(pg.image.load('texturas/tiles/ruina/Ruina.png').convert(),(200,0+(int(tempo*0.1))))
