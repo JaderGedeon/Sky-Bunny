@@ -14,16 +14,20 @@ não realizamos quaisquer outras atividades desonestas para nos beneficiar ou pr
 
 import src.GeradorDeMapa as MG
 import src.Menus as MN
+import src.Pontuador as PN
 import pygame as pg
 import sys
 import random
 
 pg.init()
 
-oi = MG.MapGenerator(85,90)
+oi = MG.MapGenerator(85,120)
 oi.inicializarIlhas()
 oi.popularMapa()
 oi.texturizarMapa()
+
+pontuador = PN.Pontuador()
+pontuador.lerPontuação()
 
 TamanhoTile = oi.texturizador.tamanhoTexturas
 
@@ -39,11 +43,13 @@ JogoAtivo = True
 def Desenhar():
     oi.texturizarMapa()
 
-font = pg.font.Font(None, 30)
+font = pg.font.Font("fontes/Retro Gaming.ttf", 16*4)
 clock = pg.time.Clock()
 
 foi = False
 tempo = 0
+tempoInicial = 0
+tempoDiferencial = 0
 
 JogoAtivo = True
 
@@ -52,9 +58,19 @@ MenuPrincipal = True
 MenuOpções = False
 MenuCréditos = False
 MenuAddRank = False
+MenuRank = False
+
+EmJogo = False
 
 contadorIndexMenu = 1
 contadorIndexMenuOpções = 1
+
+contadorIndexMenuAddRank = 1
+contadorIndexLetraAddRank = 1
+
+jogadorNome = ["A","A","A"]
+pontuacao = 1000
+
 diferençatempo = 0
 
 #Música
@@ -94,6 +110,8 @@ while JogoAtivo:
                         oi.reiniciarMapa()
                         Desenhar()
                         foi = True
+                        tempoInicial = pg.time.get_ticks()
+                        EmJogo = True
 
                     # Load
                     if contadorIndexMenu == 2:
@@ -102,14 +120,13 @@ while JogoAtivo:
 
                     # Options
                     if contadorIndexMenu == 3:
-                        screen.fill((0, 0, 0))
                         diferençatempo = tempo
                         MenuOpções = True
 
                     # Rank
                     if contadorIndexMenu == 4:
-                        screen.fill((0, 0, 0))
-                        pass
+                        diferençatempo = tempo
+                        MenuRank = True
 
                     #Sai do jogo
                     if contadorIndexMenu == 5:
@@ -165,12 +182,62 @@ while JogoAtivo:
                     MenuOpções = True
                     
         if MenuAddRank:
-            UI.menuAddRank(screen)
+            UI.menuAddRank(screen, contadorIndexMenuAddRank+2, contadorIndexLetraAddRank, jogadorNome, pontuacao)
 
             if event.type == pg.KEYDOWN:
-                if event.key == pg.K_SPACE:
-                    MenuAddRank = False
+                # Baixo
+                if event.key == pg.K_RIGHT:
+                    if contadorIndexMenuAddRank == 1:
+                        if contadorIndexLetraAddRank < 3:
+                            contadorIndexLetraAddRank += 1
+                        elif contadorIndexLetraAddRank == 3:
+                            contadorIndexMenuAddRank += 1
+
+                    elif contadorIndexMenuAddRank < 3:
+                        contadorIndexMenuAddRank += 1
+                # Cima
+                if event.key == pg.K_LEFT:
+
+                    if contadorIndexMenuAddRank == 1:
+                        if contadorIndexLetraAddRank > 1:
+                            contadorIndexLetraAddRank -= 1
+                    else:
+                        contadorIndexMenuAddRank -= 1
+
+                if contadorIndexMenuAddRank == 1:
+                    if event.key == pg.K_UP:
+                        jogadorNome[contadorIndexLetraAddRank-1] = UI.SelecionarLetras(jogadorNome[contadorIndexLetraAddRank-1],-1)
+                    if event.key == pg.K_DOWN:
+                        jogadorNome[contadorIndexLetraAddRank-1] = UI.SelecionarLetras(jogadorNome[contadorIndexLetraAddRank-1 ],1)
+                    print(jogadorNome)
+
+
+            if event.type == pg.KEYDOWN:
+                if event.key == pg.K_SPACE and contadorIndexMenuAddRank != 1:
+
+                    # Salvar
+                    if contadorIndexMenuAddRank == 2:
+                        pontuador.salvarPontuação([''.join(jogadorNome),pontuacao])
+                        MenuAddRank = False
+                        jogadorNome = ["A", "A", "A"]
+                        diferençatempo = tempo
+                        MenuPrincipal = True
+
+                    # Créditos
+                    if contadorIndexMenuAddRank == 3:
+                        jogadorNome = ["A", "A", "A"]
+                        MenuAddRank = False
+                        diferençatempo = tempo
+                        MenuPrincipal = True
+
+        if MenuRank:
+            pontuador.lerPontuação()
+            UI.menuRank(screen,pontuador.matrizPontuação)
+
+            if event.type == pg.KEYDOWN:
+                if event.key == pg.K_SPACE and diferençatempo != tempo:
                     diferençatempo = tempo
+                    MenuRank = False
                     MenuPrincipal = True
 
 
@@ -185,8 +252,11 @@ while JogoAtivo:
             if event.key == pg.K_m:
                 UI.menuPrincipal(screen,0)
             if event.key == pg.K_n:
+                EmJogo = False
                 foi = False
                 MenuAddRank = True
+            if event.key == pg.K_p:
+                pontuacao += 40
 
 
     # Set the screen background
@@ -199,8 +269,36 @@ while JogoAtivo:
 
     tempo += clock.get_time()
 
-    if tempo >= 6000:
+    if tempo >= 10000:
         tempo = 0
+
+
+
+    if EmJogo:
+        tempoEmJogo = int((pg.time.get_ticks() - tempoInicial) / 1000)
+        if tempoEmJogo != tempoDiferencial:
+            tempoDiferencial = tempoEmJogo
+            pontuacao-=1
+
+        if pontuacao > 9999:
+            pontuacao = 9999
+        elif pontuacao < 0:
+            pontuacao = 0
+
+        painelPontuação = pontuacao
+
+        if painelPontuação >= 1000:
+            pass
+        elif painelPontuação >= 100:
+            painelPontuação = ("0" + str(painelPontuação))
+        elif painelPontuação >= 10:
+            painelPontuação = ("00" + str(painelPontuação))
+        elif painelPontuação >= 0:
+            painelPontuação = ("000" + str(painelPontuação))
+
+        screen.blit(font.render("%s" % str(painelPontuação), True, (117, 43, 0)), (200, 0))
+
+
 
     diferençatempo = -1
 
