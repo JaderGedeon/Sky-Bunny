@@ -83,18 +83,38 @@ pg.mixer.music.set_volume(volume)
 
 # ==================================================
 
-x = 300
-y = 300
+x = 1280/2
+y = 720/2
 hit = False
 
 elementos = Elementos.Personagens(x, y)
 
 elementos.coelho.dashTimer()
 
+CameraX = 1280/2
+CameraY = 720/2
+
 # ==================================================
+
+
+def ReiniciarJogo():
+    screen.fill((0, 0, 0))
+    global pontuacao
+    pontuacao = 1000
+    oi.reiniciarMapa()
+    Desenhar()
+
+    global foi
+    foi = True
+    global tempoInicial
+    tempoInicial = pg.time.get_ticks()
+    global EmJogo
+    EmJogo = True
+
 
 while JogoAtivo:
     for event in pg.event.get():  # User did something
+
 
         if MenuPrincipal:
             # Desenha o menu
@@ -118,12 +138,7 @@ while JogoAtivo:
 
                     #Inicia o jogo
                     if contadorIndexMenu == 1:
-                        screen.fill((0, 0, 0))
-                        oi.reiniciarMapa()
-                        Desenhar()
-                        foi = True
-                        tempoInicial = pg.time.get_ticks()
-                        EmJogo = True
+                        ReiniciarJogo()
 
                     # Load
                     if contadorIndexMenu == 2:
@@ -277,10 +292,22 @@ while JogoAtivo:
     # Set the screen background
     if foi == True:
         screen.fill((255,218,255))
+        '''
+        screen.fill((255,218,255))
         for i in range(len(oi.mapa)):
             for j in range(len(oi.mapa[0])):
-                if oi.mapa[i][j].tipoTerrenoTile != "CéDu":
-                    screen.blit(oi.mapa[i][j].texturaDoTile, (j * TamanhoTile, i * TamanhoTile))
+                if oi.mapa[i][j].tipoTerrenoTile != "Céu":
+                    screen.blit(oi.mapa[i][j].texturaDoTile, (j * TamanhoTile-CameraX, i * TamanhoTile-CameraY))
+        '''
+
+        for sprites in oi.grupoTiles:
+            screen.blit(sprites.image,(sprites.rect.x-CameraX,sprites.rect.y-CameraY))
+
+        for inimigo in oi.inimigos:
+            imagem = inimigo[0]
+            imagem.fill(inimigo[2])
+            retangulo = imagem.get_rect()
+            screen.blit(imagem, (inimigo[1][0]-CameraX,inimigo[1][1]-CameraY))
     # =================================
 
     if foi == True:
@@ -290,7 +317,18 @@ while JogoAtivo:
 
         elementos.hit()
 
-        elementos.spritesGerais.draw(screen)
+        #elementos.spritesGerais.draw(screen)
+
+        for sprites in elementos.spritesGerais:
+            screen.blit(sprites.image,(sprites.rect.x-CameraX,sprites.rect.y-CameraY))
+
+        CameraX = elementos.coelho.rect.x-1280/2
+        CameraY = elementos.coelho.rect.y-720/2
+
+
+
+
+
     # ===================================
 
     screen.blit(pg.image.load('texturas/tiles/ruina/Ruina.png').convert(),(200,0+(int(tempo*0.1))))
@@ -324,12 +362,11 @@ while JogoAtivo:
         elif painelPontuação >= 0:
             painelPontuação = ("000" + str(painelPontuação))
 
-        screen.blit(font.render("%s" % str(painelPontuação), True, (117, 43, 0)), (200, 0))
-
-
+        screen.blit(font.render("%s" % str(painelPontuação), True, (117, 43, 0)), (1050, 0))
 
     diferençatempo = -1
 
     pg.display.set_caption(str(int(clock.get_fps())))
     clock.tick(30)
     pg.display.flip()
+

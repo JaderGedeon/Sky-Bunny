@@ -13,7 +13,7 @@ class Textura:
 
 class TexturasMapa:
 
-    tamanhoTexturas = 6
+    tamanhoTexturas = 64
     listaDeTexturas = []
 
     def __init__(self):
