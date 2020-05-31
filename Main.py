@@ -12,6 +12,7 @@ não disponibilizamos nossas respostas para colegas externos à equipe e
 não realizamos quaisquer outras atividades desonestas para nos beneficiar ou prejudicar outros.
 """
 
+from src.Elementos_Personagens import Elementos
 import src.GeradorDeMapa as MG
 import src.Menus as MN
 import src.Pontuador as PN
@@ -80,6 +81,18 @@ pg.mixer.init()
 pg.mixer.music.load('musica/musicaPrincipal.mp3')
 pg.mixer.music.play(loops=-1, start=0.0)
 pg.mixer.music.set_volume(volume)
+
+# ==================================================
+
+x = 300
+y = 300
+hit = False
+
+elementos = Elementos.Personagens(x, y)
+
+elementos.coelho.dashTimer()
+
+# ==================================================
 
 while JogoAtivo:
     for event in pg.event.get():  # User did something
@@ -264,6 +277,18 @@ while JogoAtivo:
         for i in range(len(oi.mapa)-10):
             for j in range(len(oi.mapa[0])-10):
                 screen.blit(oi.mapa[i][j].texturaDoTile, (j * TamanhoTile, i * TamanhoTile))
+                # =================================
+                elementos.coelho.dashEvento(event)
+                elementos.coelho.puloCarregado(event)
+    
+    elementos.coelho.vida()
+    elementos.coelho.movimentoBasico()
+    elementos.cenoura.movimentoBasico()
+
+    elementos.hit()
+
+    elementos.spritesGerais.draw(screen)
+    # ===================================
 
     screen.blit(pg.image.load('texturas/tiles/ruina/Ruina.png').convert(),(200,0+(int(tempo*0.1))))
 
