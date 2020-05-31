@@ -22,15 +22,15 @@ import random
 
 pg.init()
 
-oi = MG.MapGenerator(85,120)
-oi.inicializarIlhas()
-oi.popularMapa()
-oi.texturizarMapa()
+grade = MG.MapGenerator(85,120)
+grade.inicializarIlhas()
+grade.popularMapa()
+grade.texturizarMapa()
 
 pontuador = PN.Pontuador()
 pontuador.lerPontuação()
 
-TamanhoTile = oi.texturizador.tamanhoTexturas
+TamanhoTile = grade.texturizador.tamanhoTexturas
 
 UI = MN.Menus()
 
@@ -42,12 +42,11 @@ pg.display.set_caption("RODA MEU DEUS")
 JogoAtivo = True
 
 def Desenhar():
-    oi.texturizarMapa()
+    grade.texturizarMapa()
 
 font = pg.font.Font("fontes/Retro Gaming.ttf", 16*4)
 clock = pg.time.Clock()
 
-foi = False
 tempo = 0
 tempoInicial = 0
 tempoDiferencial = 0
@@ -101,11 +100,9 @@ def ReiniciarJogo():
     screen.fill((0, 0, 0))
     global pontuacao
     pontuacao = 1000
-    oi.reiniciarMapa()
+    grade.reiniciarMapa()
     Desenhar()
 
-    global foi
-    foi = True
     global tempoInicial
     tempoInicial = pg.time.get_ticks()
     global EmJogo
@@ -115,157 +112,158 @@ def ReiniciarJogo():
 while JogoAtivo:
     for event in pg.event.get():  # User did something
 
+        if EmJogo != True:
 
-        if MenuPrincipal:
-            # Desenha o menu
-            UI.menuPrincipal(screen, contadorIndexMenu)
+            if MenuPrincipal:
+                # Desenha o menu
+                UI.menuPrincipal(screen, contadorIndexMenu)
 
-            if event.type == pg.KEYDOWN:
-                # Baixo direita
-                if event.key == pg.K_DOWN or event.key == pg.K_RIGHT:
-                    contadorIndexMenu += 1
-                    if contadorIndexMenu > 5:
-                        contadorIndexMenu = 1
-                # Cima esquerda
-                if event.key == pg.K_UP or event.key == pg.K_LEFT:
-                    contadorIndexMenu -= 1
-                    if contadorIndexMenu < 1:
-                        contadorIndexMenu = 5
+                if event.type == pg.KEYDOWN:
+                    # Baixo direita
+                    if event.key == pg.K_DOWN or event.key == pg.K_RIGHT:
+                        contadorIndexMenu += 1
+                        if contadorIndexMenu > 5:
+                            contadorIndexMenu = 1
+                    # Cima esquerda
+                    if event.key == pg.K_UP or event.key == pg.K_LEFT:
+                        contadorIndexMenu -= 1
+                        if contadorIndexMenu < 1:
+                            contadorIndexMenu = 5
 
-                # Escolha de menu
-                if event.key == pg.K_SPACE:
-                    MenuPrincipal = False
+                    # Escolha de menu
+                    if event.key == pg.K_SPACE:
+                        MenuPrincipal = False
 
-                    #Inicia o jogo
-                    if contadorIndexMenu == 1:
-                        ReiniciarJogo()
+                        #Inicia o jogo
+                        if contadorIndexMenu == 1:
+                            ReiniciarJogo()
 
-                    # Load
-                    if contadorIndexMenu == 2:
-                        screen.fill((0, 0, 0))
-                        pass
+                        # Load
+                        if contadorIndexMenu == 2:
+                            screen.fill((0, 0, 0))
+                            pass
 
-                    # Options
-                    if contadorIndexMenu == 3:
-                        diferençatempo = tempo
+                        # Options
+                        if contadorIndexMenu == 3:
+                            diferençatempo = tempo
+                            MenuOpções = True
+
+                        # Rank
+                        if contadorIndexMenu == 4:
+                            diferençatempo = tempo
+                            MenuRank = True
+
+                        #Sai do jogo
+                        if contadorIndexMenu == 5:
+                            JogoAtivo = False
+
+            if MenuOpções:
+                UI.menuOpções(screen, contadorIndexMenuOpções, volume)
+
+                if event.type == pg.KEYDOWN:
+                    # Baixo
+                    if event.key == pg.K_DOWN:
+                        contadorIndexMenuOpções += 1
+                        if contadorIndexMenuOpções > 3:
+                            contadorIndexMenuOpções = 1
+                    # Cima
+                    if event.key == pg.K_UP:
+                        contadorIndexMenuOpções -= 1
+                        if contadorIndexMenuOpções < 1:
+                            contadorIndexMenuOpções = 3
+
+                    # SOM
+                    if contadorIndexMenuOpções == 2:
+                        print(volume)
+                        if event.key == pg.K_RIGHT:
+                            if volume < 0.9:
+                                volume += 0.1
+                                pg.mixer.music.set_volume(volume)
+                        if event.key == pg.K_LEFT:
+                            if volume > 0.1:
+                                volume -= 0.1
+                                pg.mixer.music.set_volume(volume)
+
+
+
+                    if event.key == pg.K_SPACE and diferençatempo != tempo and contadorIndexMenuOpções != 2:
+                        MenuOpções = False
+
+                        #Volta
+                        if contadorIndexMenuOpções == 1:
+                            MenuPrincipal = True
+
+                        # Créditos
+                        if contadorIndexMenuOpções == 3:
+                            diferençatempo = tempo
+                            MenuCréditos = True
+
+            if MenuCréditos:
+                UI.menuCréditos(screen)
+
+                if event.type == pg.KEYDOWN:
+                    if event.key == pg.K_SPACE and diferençatempo != tempo:
+                        MenuCréditos = False
                         MenuOpções = True
 
-                    # Rank
-                    if contadorIndexMenu == 4:
-                        diferençatempo = tempo
-                        MenuRank = True
+            if MenuAddRank:
+                UI.menuAddRank(screen, contadorIndexMenuAddRank+2, contadorIndexLetraAddRank, jogadorNome, pontuacao)
 
-                    #Sai do jogo
-                    if contadorIndexMenu == 5:
-                        JogoAtivo = False
-
-        if MenuOpções:
-            UI.menuOpções(screen, contadorIndexMenuOpções, volume)
-
-            if event.type == pg.KEYDOWN:
-                # Baixo
-                if event.key == pg.K_DOWN:
-                    contadorIndexMenuOpções += 1
-                    if contadorIndexMenuOpções > 3:
-                        contadorIndexMenuOpções = 1
-                # Cima
-                if event.key == pg.K_UP:
-                    contadorIndexMenuOpções -= 1
-                    if contadorIndexMenuOpções < 1:
-                        contadorIndexMenuOpções = 3
-
-                # SOM
-                if contadorIndexMenuOpções == 2:
-                    print(volume)
+                if event.type == pg.KEYDOWN:
+                    # Baixo
                     if event.key == pg.K_RIGHT:
-                        if volume < 0.9:
-                            volume += 0.1
-                            pg.mixer.music.set_volume(volume)
-                    if event.key == pg.K_LEFT:
-                        if volume > 0.1:
-                            volume -= 0.1
-                            pg.mixer.music.set_volume(volume)
+                        if contadorIndexMenuAddRank == 1:
+                            if contadorIndexLetraAddRank < 3:
+                                contadorIndexLetraAddRank += 1
+                            elif contadorIndexLetraAddRank == 3:
+                                contadorIndexMenuAddRank += 1
 
-
-
-                if event.key == pg.K_SPACE and diferençatempo != tempo and contadorIndexMenuOpções != 2:
-                    MenuOpções = False
-
-                    #Volta
-                    if contadorIndexMenuOpções == 1:
-                        MenuPrincipal = True
-
-                    # Créditos
-                    if contadorIndexMenuOpções == 3:
-                        diferençatempo = tempo
-                        MenuCréditos = True
-
-        if MenuCréditos:
-            UI.menuCréditos(screen)
-
-            if event.type == pg.KEYDOWN:
-                if event.key == pg.K_SPACE and diferençatempo != tempo:
-                    MenuCréditos = False
-                    MenuOpções = True
-                    
-        if MenuAddRank:
-            UI.menuAddRank(screen, contadorIndexMenuAddRank+2, contadorIndexLetraAddRank, jogadorNome, pontuacao)
-
-            if event.type == pg.KEYDOWN:
-                # Baixo
-                if event.key == pg.K_RIGHT:
-                    if contadorIndexMenuAddRank == 1:
-                        if contadorIndexLetraAddRank < 3:
-                            contadorIndexLetraAddRank += 1
-                        elif contadorIndexLetraAddRank == 3:
+                        elif contadorIndexMenuAddRank < 3:
                             contadorIndexMenuAddRank += 1
+                    # Cima
+                    if event.key == pg.K_LEFT:
 
-                    elif contadorIndexMenuAddRank < 3:
-                        contadorIndexMenuAddRank += 1
-                # Cima
-                if event.key == pg.K_LEFT:
+                        if contadorIndexMenuAddRank == 1:
+                            if contadorIndexLetraAddRank > 1:
+                                contadorIndexLetraAddRank -= 1
+                        else:
+                            contadorIndexMenuAddRank -= 1
 
                     if contadorIndexMenuAddRank == 1:
-                        if contadorIndexLetraAddRank > 1:
-                            contadorIndexLetraAddRank -= 1
-                    else:
-                        contadorIndexMenuAddRank -= 1
-
-                if contadorIndexMenuAddRank == 1:
-                    if event.key == pg.K_UP:
-                        jogadorNome[contadorIndexLetraAddRank-1] = UI.SelecionarLetras(jogadorNome[contadorIndexLetraAddRank-1],-1)
-                    if event.key == pg.K_DOWN:
-                        jogadorNome[contadorIndexLetraAddRank-1] = UI.SelecionarLetras(jogadorNome[contadorIndexLetraAddRank-1 ],1)
-                    print(jogadorNome)
+                        if event.key == pg.K_UP:
+                            jogadorNome[contadorIndexLetraAddRank-1] = UI.SelecionarLetras(jogadorNome[contadorIndexLetraAddRank-1],-1)
+                        if event.key == pg.K_DOWN:
+                            jogadorNome[contadorIndexLetraAddRank-1] = UI.SelecionarLetras(jogadorNome[contadorIndexLetraAddRank-1 ],1)
+                        print(jogadorNome)
 
 
-            if event.type == pg.KEYDOWN:
-                if event.key == pg.K_SPACE and contadorIndexMenuAddRank != 1:
+                if event.type == pg.KEYDOWN:
+                    if event.key == pg.K_SPACE and contadorIndexMenuAddRank != 1:
 
-                    # Salvar
-                    if contadorIndexMenuAddRank == 2:
-                        pontuador.salvarPontuação([''.join(jogadorNome),pontuacao])
-                        MenuAddRank = False
-                        jogadorNome = ["A", "A", "A"]
+                        # Salvar
+                        if contadorIndexMenuAddRank == 2:
+                            pontuador.salvarPontuação([''.join(jogadorNome),pontuacao])
+                            MenuAddRank = False
+                            jogadorNome = ["A", "A", "A"]
+                            diferençatempo = tempo
+                            MenuPrincipal = True
+
+                        # Créditos
+                        if contadorIndexMenuAddRank == 3:
+                            jogadorNome = ["A", "A", "A"]
+                            MenuAddRank = False
+                            diferençatempo = tempo
+                            MenuPrincipal = True
+
+            if MenuRank:
+                pontuador.lerPontuação()
+                UI.menuRank(screen,pontuador.matrizPontuação)
+
+                if event.type == pg.KEYDOWN:
+                    if event.key == pg.K_SPACE and diferençatempo != tempo:
                         diferençatempo = tempo
+                        MenuRank = False
                         MenuPrincipal = True
-
-                    # Créditos
-                    if contadorIndexMenuAddRank == 3:
-                        jogadorNome = ["A", "A", "A"]
-                        MenuAddRank = False
-                        diferençatempo = tempo
-                        MenuPrincipal = True
-
-        if MenuRank:
-            pontuador.lerPontuação()
-            UI.menuRank(screen,pontuador.matrizPontuação)
-
-            if event.type == pg.KEYDOWN:
-                if event.key == pg.K_SPACE and diferençatempo != tempo:
-                    diferençatempo = tempo
-                    MenuRank = False
-                    MenuPrincipal = True
 
 
 
@@ -273,44 +271,43 @@ while JogoAtivo:
             JogoAtivo = False  # Flag that we are done so we exit this loop
         if event.type == pg.KEYDOWN:
             if event.key == pg.K_h:
-                oi.reiniciarMapa()
+                grade.reiniciarMapa()
                 Desenhar()
-                foi = True
+                EmJogo = True
             if event.key == pg.K_m:
                 UI.menuPrincipal(screen,0)
             if event.key == pg.K_n:
                 EmJogo = False
-                foi = False
                 MenuAddRank = True
             if event.key == pg.K_p:
                 pontuacao += 40
 
-        if foi == True:
+        if EmJogo == True:
             elementos.coelho.dashEvento(event)
             elementos.coelho.puloCarregado(event)
 
     # Set the screen background
-    if foi == True:
-        screen.fill((255,218,255))
+    if EmJogo == True:
+        screen.fill((255, 218, 255))
         '''
         screen.fill((255,218,255))
-        for i in range(len(oi.mapa)):
-            for j in range(len(oi.mapa[0])):
-                if oi.mapa[i][j].tipoTerrenoTile != "Céu":
-                    screen.blit(oi.mapa[i][j].texturaDoTile, (j * TamanhoTile-CameraX, i * TamanhoTile-CameraY))
+        for i in range(len(grade.mapa)):
+            for j in range(len(grade.mapa[0])):
+                if grade.mapa[i][j].tipoTerrenoTile != "Céu":
+                    screen.blit(grade.mapa[i][j].texturaDoTile, (j * TamanhoTile-CameraX, i * TamanhoTile-CameraY))
         '''
 
-        for sprites in oi.grupoTiles:
+        for sprites in grade.grupoTiles:
             screen.blit(sprites.image,(sprites.rect.x-CameraX,sprites.rect.y-CameraY))
 
-        for inimigo in oi.inimigos:
+        for inimigo in grade.inimigos:
             imagem = inimigo[0]
             imagem.fill(inimigo[2])
             retangulo = imagem.get_rect()
             screen.blit(imagem, (inimigo[1][0]-CameraX,inimigo[1][1]-CameraY))
+
     # =================================
 
-    if foi == True:
         elementos.coelho.vida()
         elementos.coelho.movimentoBasico()
         elementos.cenoura.movimentoBasico()
@@ -325,22 +322,18 @@ while JogoAtivo:
         CameraX = elementos.coelho.rect.x-1280/2
         CameraY = elementos.coelho.rect.y-720/2
 
+        pulando = False
+        if not pulando:
+            hit = False
+            hit = pg.sprite.spritecollide(elementos.coelho, grade.grupoTiles, False)
+            if not hit:
+                print("No céu")
 
 
 
 
     # ===================================
 
-    screen.blit(pg.image.load('texturas/tiles/ruina/Ruina.png').convert(),(200,0+(int(tempo*0.1))))
-
-    tempo += clock.get_time()
-
-    if tempo >= 10000:
-        tempo = 0
-
-
-
-    if EmJogo:
         tempoEmJogo = int((pg.time.get_ticks() - tempoInicial) / 1000)
         if tempoEmJogo != tempoDiferencial:
             tempoDiferencial = tempoEmJogo
@@ -363,6 +356,16 @@ while JogoAtivo:
             painelPontuação = ("000" + str(painelPontuação))
 
         screen.blit(font.render("%s" % str(painelPontuação), True, (117, 43, 0)), (1050, 0))
+
+
+    ## Continuação Normal
+
+    screen.blit(pg.image.load('texturas/tiles/ruina/Ruina.png').convert(),(200,0+(int(tempo*0.1))))
+
+    tempo += clock.get_time()
+
+    if tempo >= 10000:
+        tempo = 0
 
     diferençatempo = -1
 

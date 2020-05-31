@@ -107,6 +107,7 @@ class MapGenerator:
     def popularMapa(self):
         self.inimigos = []
         self.conjuntoIlhas = []
+        self.grupoTiles = pygame.sprite.Group()
 
         identificadorDeIlhas = 2
         idTotal = 0
@@ -225,10 +226,10 @@ class MapGenerator:
 
         for i in range(len(self.mapa)):
             for j in range(len(self.mapa[0])):
-                if self.mapa[i][j].tipoTerrenoTile != None and self.mapa[i][j].tipoTerrenoTile != "Céu":
-                    self.mapa[i][j].xTile = j*self.texturizador.tamanhoTexturas
-                    self.mapa[i][j].yTile = i * self.texturizador.tamanhoTexturas
-                    self.conjuntoIlhas[self.mapa[i][j].idIlha].append(self.mapa[i][j])
+                #if self.mapa[i][j].tipoTerrenoTile != None and self.mapa[i][j].tipoTerrenoTile != "Céu":
+                self.mapa[i][j].xTile = j*self.texturizador.tamanhoTexturas
+                self.mapa[i][j].yTile = i * self.texturizador.tamanhoTexturas
+                self.conjuntoIlhas[self.mapa[i][j].idIlha].append(self.mapa[i][j])
                 if self.mapa[i][j].tipoTerrenoTile == None:
                     self.mapa[i][j].tipoTerrenoTile = "Céu"
 
@@ -328,6 +329,7 @@ class MapGenerator:
     def reiniciarMapa(self):
         self.mapa = [[TileInfo.Tile(None,"","",0,0,0) for x in range(self.comprimento)] for y in range(self.altura)]
         MapGenerator.popularMapa(self)
+
 
     def povoarInimigos(self):
 
