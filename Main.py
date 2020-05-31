@@ -76,9 +76,8 @@ diferençatempo = 0
 
 #Música
 volume = 0.5
-
 pg.mixer.init()
-pg.mixer.music.load('musica/musicaPrincipal.mp3')
+pg.mixer.music.load('musica/skyloop.wav')
 pg.mixer.music.play(loops=-1, start=0.0)
 pg.mixer.music.set_volume(volume)
 
@@ -271,23 +270,27 @@ while JogoAtivo:
             if event.key == pg.K_p:
                 pontuacao += 40
 
+        if foi == True:
+            elementos.coelho.dashEvento(event)
+            elementos.coelho.puloCarregado(event)
 
     # Set the screen background
     if foi == True:
-        for i in range(len(oi.mapa)-10):
-            for j in range(len(oi.mapa[0])-10):
-                screen.blit(oi.mapa[i][j].texturaDoTile, (j * TamanhoTile, i * TamanhoTile))
-                # =================================
-                elementos.coelho.dashEvento(event)
-                elementos.coelho.puloCarregado(event)
-    
-    elementos.coelho.vida()
-    elementos.coelho.movimentoBasico()
-    elementos.cenoura.movimentoBasico()
+        screen.fill((255,218,255))
+        for i in range(len(oi.mapa)):
+            for j in range(len(oi.mapa[0])):
+                if oi.mapa[i][j].tipoTerrenoTile != "CéDu":
+                    screen.blit(oi.mapa[i][j].texturaDoTile, (j * TamanhoTile, i * TamanhoTile))
+    # =================================
 
-    elementos.hit()
+    if foi == True:
+        elementos.coelho.vida()
+        elementos.coelho.movimentoBasico()
+        elementos.cenoura.movimentoBasico()
 
-    elementos.spritesGerais.draw(screen)
+        elementos.hit()
+
+        elementos.spritesGerais.draw(screen)
     # ===================================
 
     screen.blit(pg.image.load('texturas/tiles/ruina/Ruina.png').convert(),(200,0+(int(tempo*0.1))))

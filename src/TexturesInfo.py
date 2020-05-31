@@ -63,3 +63,5 @@ class TexturasMapa:
             if tile.formatoTile in texturas.formatoTextura and tile.tipoTerrenoTile == texturas.tipoTextura:
                 return texturas.caminhoTextura
 
+
+
