@@ -1,0 +1,5 @@
+venv/
+src/__pycache__/
+.idea/workspace.xml
+*.pyc
+src/Elementos_Personagens/__pycache__/Elementos.cpython-38.pyc
