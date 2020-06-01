@@ -17,7 +17,7 @@ class Menus:
 
     def __init__(self):
         self.listaDeTexturas = [
-            TexturaUI(0, "Background", pg.transform.scale(pg.image.load("texturas/interfaces/Fundo_Menu.png"), (304*4, 208*4))),
+            TexturaUI(0, "Background", pg.transform.scale(pg.image.load("texturas/interfaces/Fundo_Menu.png"), (323*4, 208*4))),
 
             TexturaUI(1, "MenuInicial", [self.carregarImagem("texturas/interfaces/StartOff.png"),self.carregarImagem("texturas/interfaces/StartOn.png")]),
             TexturaUI(2, "MenuInicial", [self.carregarImagem("texturas/interfaces/LoadOff.png"),self.carregarImagem("texturas/interfaces/LoadOn.png")]),
