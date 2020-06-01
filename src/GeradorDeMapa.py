@@ -26,6 +26,14 @@ class MapGenerator:
     listaDeIlhas = []
     listaDeIlhasTransitorias = []
 
+    gruposDeSprite = {
+        "Chão": pygame.sprite.Group(),
+        "Ruína": pygame.sprite.Group(),
+        "Parede": pygame.sprite.Group(),
+        "PortalAtivo": pygame.sprite.Group(),
+        "PortalDesativado": pygame.sprite.Group(),
+    }
+
 
 
     dimensoesIlha = {
@@ -108,6 +116,9 @@ class MapGenerator:
         self.inimigos = []
         self.conjuntoIlhas = []
         self.grupoTiles = pygame.sprite.Group()
+
+        for items in self.gruposDeSprite:
+            items = pygame.sprite.Group()
 
         identificadorDeIlhas = 2
         idTotal = 0
@@ -290,8 +301,9 @@ class MapGenerator:
                             elif self.mapa[i+1][j].tipoTerrenoTile != "Céu" and self.mapa[i+1][j+1].tipoTerrenoTile == "Céu":
                                 self.mapa[i][j].formatoTile = "LigacaoID"
 
+                        self.gruposDeSprite["Chão"].add(self.mapa[i][j])
                     #Lógica da Ruina
-                    if self.mapa[i][j].tipoTerrenoTile == "Ruina":
+                    elif self.mapa[i][j].tipoTerrenoTile == "Ruina":
 
                         # ESQUERDA
                         if self.mapa[i][j - 1].tipoTerrenoTile != self.mapa[i][j].tipoTerrenoTile:
@@ -315,9 +327,16 @@ class MapGenerator:
                                 else:
                                     self.mapa[i][j].formatoTile = "CantoID"
 
+                        self.gruposDeSprite["Ruína"].add(self.mapa[i][j])
                     #Lógica da Parede e Portal
-                    if self.mapa[i][j].tipoTerrenoTile == "Parede" or self.mapa[i][j].tipoTerrenoTile == "Portal":
-                        self.mapa[i][j].formatoTile = "Centro"
+                    elif self.mapa[i][j].tipoTerrenoTile == "Portal":
+                        if self.mapa[i][j].idIlha == 2:
+                            self.gruposDeSprite["PortalAtivo"].add(self.mapa[i][j])
+                        else:
+                            self.gruposDeSprite["PortalDesativado"].add(self.mapa[i][j])
+
+                    elif self.mapa[i][j].tipoTerrenoTile == "Parede":
+                        self.gruposDeSprite["Parede"].add(self.mapa[i][j])
 
 
                     self.mapa[i][j].texturaDoTile = self.texturizador.TexturizarTile(self.mapa[i][j])

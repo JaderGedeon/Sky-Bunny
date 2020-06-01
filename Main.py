@@ -329,6 +329,16 @@ while JogoAtivo:
             if not hit:
                 print("No céu")
 
+        teleportando = False
+        teleportando = pg.sprite.spritecollide(elementos.coelho, grade.gruposDeSprite["PortalAtivo"], False)
+        if teleportando:
+            screen.fill((255,255,255))
+            grade.reiniciarMapa()
+            Desenhar()
+            for portal in grade.gruposDeSprite["PortalDesativado"]:
+                elementos.coelho.rect.x = portal.rect.x
+                elementos.coelho.rect.y = portal.rect.y
+
 
 
 
