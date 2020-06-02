@@ -20,6 +20,8 @@ import pygame as pg
 import sys
 import random
 
+from src.Elementos_Personagens.Elementos import Personagens
+
 pg.init()
 
 WINDOW_SIZE = [1280, 720]
@@ -86,9 +88,17 @@ x = 1280/2
 y = 720/2
 hit = False
 
-elementos = Elementos.Personagens(x, y)
+elementos: Personagens = Elementos.Personagens(x, y)
 
+# Timers
 elementos.coelho.dashTimer()
+for sprites in elementos.chargers:
+    sprites.investidaTimer()
+for sprites in elementos.cenouras:
+    sprites.ativacaoTimer()
+for sprites in elementos.tirosSprite:
+    sprites.tiroTimer()
+
 
 CameraX = 1280/2
 CameraY = 720/2
@@ -117,7 +127,23 @@ tilesDaTela = pg.sprite.Group()
 
 fases = 0
 
+def Movimento():
+    elementos.coelho.movimentoBasico()
+    for sprites in elementos.cenouras:
+        sprites.movimentoBasico()
+    for sprites in elementos.chargers:
+       sprites.movimentoBasico()
+    for sprites in elementos.tirosSprite:
+        sprites.movimentoBasico()
+    for sprites in elementos.cenourideos:
+        sprites.movimentoBasico()
+
+def DeteccaoDeDano():
+    elementos.coelho.vida()
+    elementos.hit()
+
 while JogoAtivo:
+    event: object
     for event in pg.event.get():  # User did something
 
         if EmJogo != True:
@@ -296,6 +322,12 @@ while JogoAtivo:
         if EmJogo == True:
             elementos.coelho.dashEvento(event)
             elementos.coelho.puloCarregado(event)
+            for sprites in elementos.chargers:
+                sprites.investidaEvento(event)
+            for sprites in elementos.cenouras:
+                sprites.ativacaoEvento(event)
+            for sprites in elementos.tirosSprite:
+                sprites.tiroDistanciaEvento(event)
 
     # Set the screen background
     if EmJogo == True:
@@ -330,11 +362,8 @@ while JogoAtivo:
 
     # =================================
 
-        elementos.coelho.vida()
-        elementos.coelho.movimentoBasico()
-        elementos.cenoura.movimentoBasico()
-
-        elementos.hit()
+        Movimento()
+        DeteccaoDeDano()
 
         #elementos.spritesGerais.draw(screen)
         for sprites in elementos.spritesGerais:
