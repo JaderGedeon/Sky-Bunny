@@ -1,4 +1,4 @@
-import pygame, math
+import pygame, math, random
 
 from src.Elementos_Personagens import Jogador
 from src.Elementos_Personagens.Inimigos import Cenoura, Charger, Cenourideo
@@ -17,9 +17,9 @@ class Personagens:
         self.tirosSprite = pygame.sprite.Group()
 
         self.jogadorGroup(x, y)
-        self.cenourasGroup()
-        self.chargersGroup()
-        self.cenourideoGroup()
+        #self.cenourasGroup()
+        #self.chargersGroup()
+        #self.cenourideoGroup()
 
         self.spritesGerais.add(self.inimigosSprite)
         self.spritesGerais.add(self.tirosSprite)
@@ -34,11 +34,12 @@ class Personagens:
             self.cenouras.add(self.cenoura)
             self.inimigosSprite.add(self.cenouras)
 
-    def chargersGroup(self):
-        for charger in range(1):
-            self.charger = Charger.Charger(self.coelho)
+    def chargersGroup(self,x,y):
+        #for charger in range(100):
+            self.charger = Charger.Charger(self.coelho,x,y)
             self.chargers.add(self.charger)
             self.inimigosSprite.add(self.chargers)
+            self.spritesGerais.add(self.inimigosSprite)
 
     def cenourideoGroup(self):
         for charger in range(1):

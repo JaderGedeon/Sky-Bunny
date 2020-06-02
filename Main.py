@@ -27,7 +27,20 @@ pg.init()
 WINDOW_SIZE = [1280, 720]
 screen = pg.display.set_mode(WINDOW_SIZE)
 
-grade = MG.MapGenerator(80,110,screen)
+# =======================================
+
+x = 1280/2
+y = 720/2
+hit = False
+
+elementos: Personagens = Elementos.Personagens(x, y)
+
+# Timers
+
+# =======================================
+
+
+grade = MG.MapGenerator(80,110,screen, elementos)
 grade.inicializarIlhas()
 grade.popularMapa()
 grade.texturizarMapa()
@@ -84,22 +97,6 @@ pg.mixer.music.set_volume(volume)
 
 # ==================================================
 
-x = 1280/2
-y = 720/2
-hit = False
-
-elementos: Personagens = Elementos.Personagens(x, y)
-
-# Timers
-elementos.coelho.dashTimer()
-for sprites in elementos.chargers:
-    sprites.investidaTimer()
-for sprites in elementos.cenouras:
-    sprites.ativacaoTimer()
-for sprites in elementos.tirosSprite:
-    sprites.tiroTimer()
-
-
 CameraX = 1280/2
 CameraY = 720/2
 
@@ -132,7 +129,9 @@ def Movimento():
     for sprites in elementos.cenouras:
         sprites.movimentoBasico()
     for sprites in elementos.chargers:
-       sprites.movimentoBasico()
+        print(elementos.chargers)
+        print("Foi")
+        sprites.movimentoBasico()
     for sprites in elementos.tirosSprite:
         sprites.movimentoBasico()
     for sprites in elementos.cenourideos:
@@ -170,12 +169,23 @@ while JogoAtivo:
 
                         #Inicia o jogo
                         if contadorIndexMenu == 1:
+                            elementos.chargers.empty()
+                            elementos.inimigosSprite.empty()
+
                             ReiniciarJogo()
+
                             for sprite in grade.grupoTiles:
                                 sprite.image.convert()
                             for portal in grade.gruposDeSprite["PortalDesativado"]:
                                 elementos.coelho.rect.x = portal.rect.x+24
                                 elementos.coelho.rect.y = portal.rect.y-24
+                            elementos.coelho.dashTimer()
+                            for sprites in elementos.chargers:
+                                sprites.investidaTimer()
+                            for sprites in elementos.cenouras:
+                                sprites.ativacaoTimer()
+                            for sprites in elementos.tirosSprite:
+                                sprites.tiroTimer()
 
                         # Load
                         if contadorIndexMenu == 2:
@@ -366,8 +376,10 @@ while JogoAtivo:
         DeteccaoDeDano()
 
         #elementos.spritesGerais.draw(screen)
-        for sprites in elementos.spritesGerais:
+        for sprites in elementos.inimigosSprite:
             screen.blit(sprites.image,(sprites.rect.x-int(CameraX),sprites.rect.y-int(CameraY)))
+
+        screen.blit(elementos.coelho.image,(elementos.coelho.rect.x-int(CameraX),elementos.coelho.rect.y-int(CameraY)))
 
         pulando = False
         if not pulando:
@@ -380,6 +392,8 @@ while JogoAtivo:
         teleportando = pg.sprite.spritecollide(elementos.coelho, grade.gruposDeSprite["PortalAtivo"], False)
         if teleportando:
             fases += 1
+            elementos.chargers.empty()
+            elementos.inimigosSprite.empty()
             screen.fill((255,255,255))
             if fases < 3:
                 grade.reiniciarMapa()
@@ -426,7 +440,7 @@ while JogoAtivo:
     tilesDaTela.empty()
 
     pg.display.set_caption(str(int(clock.get_fps())))
-    clock.tick(60)
+    clock.tick(30)
     pg.display.flip()
 
 

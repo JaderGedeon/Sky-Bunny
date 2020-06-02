@@ -46,10 +46,11 @@ class MapGenerator:
         "comprimento": 15, #Fica em 0, tá aqui para caso precisarmos fazer alguma mudança
     }
 
-    def __init__(self, comprimento, altura,screen):
+    def __init__(self, comprimento, altura,screen, elementos):
         self.comprimento = comprimento
         self.altura = altura
         self.screen = screen
+        self.elementos = elementos
 
         self.texturizador = TexturesInfo.TexturasMapa(screen)
 
@@ -368,7 +369,9 @@ class MapGenerator:
                     if conjIlhas[0].formatoTile == "Centro":
                         if pesoIlha >= 5 and inimigoSelecionador == 1:
                             pesoIlha -= 5
-                            self.inimigos.append([pygame.Surface((32, 32)),(conjIlhas[0].xTile,conjIlhas[0].yTile),(25,150,255)])
+                            self.elementos.chargersGroup(conjIlhas[0].xTile,conjIlhas[0].yTile)
+                            print("Desenhou")
+                            #self.inimigos.append([pygame.Surface((32, 32)),(conjIlhas[0].xTile,conjIlhas[0].yTile),(25,150,255)])
                         elif pesoIlha >= 3 and inimigoSelecionador == 2:
                             pesoIlha -=3
                             self.inimigos.append([pygame.Surface((32, 32)),(conjIlhas[0].xTile,conjIlhas[0].yTile),(255,137,0)])
