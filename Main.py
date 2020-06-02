@@ -107,9 +107,15 @@ def ReiniciarJogo():
     tempoInicial = pg.time.get_ticks()
     global EmJogo
     EmJogo = True
+    global fases
+    fases = 0
 
 bg = pg.Surface((1280, 720))
 bg.fill((255, 218, 255))
+
+tilesDaTela = pg.sprite.Group()
+
+fases = 0
 
 while JogoAtivo:
     for event in pg.event.get():  # User did something
@@ -298,19 +304,14 @@ while JogoAtivo:
         CameraX = elementos.coelho.rect.x-1280/2
         CameraY = elementos.coelho.rect.y-720/2
 
-        contador = 0
-
         try:
             for i in range(int((CameraY)/64),int((CameraY+784)/64)):
                 for j in range(int((CameraX) / 64), int((CameraX + 1344) / 64)):
-                    contador += 1
                     if grade.mapa[i][j].tipoTerrenoTile != "Céu":
-                        screen.blit(grade.mapa[i][j].texturaDoTile, (j * TamanhoTile - CameraX, i * TamanhoTile - CameraY))
-                contador += 1
+                        screen.blit(grade.mapa[i][j].texturaDoTile, (j * TamanhoTile - int(CameraX), i * TamanhoTile - int(CameraY)))
+                        tilesDaTela.add(grade.mapa[i][j])
         except:
             pass
-
-        print(contador)
 
         '''
         for sprites in grade.grupoTiles:
@@ -341,23 +342,26 @@ while JogoAtivo:
 
         pulando = False
         if not pulando:
-            hit = False
-            hit = pg.sprite.spritecollide(elementos.coelho, grade.grupoTiles, False)
+            hit = False #                                grade.grupoTiles
+            hit = pg.sprite.spritecollide(elementos.coelho,tilesDaTela, False)
             if not hit:
-                pass
                 print("No céu")
-
-        print(grade.gruposDeSprite["PortalAtivo"])
 
         teleportando = False
         teleportando = pg.sprite.spritecollide(elementos.coelho, grade.gruposDeSprite["PortalAtivo"], False)
         if teleportando:
+            fases += 1
             screen.fill((255,255,255))
-            grade.reiniciarMapa()
-            Desenhar()
-            for portal in grade.gruposDeSprite["PortalDesativado"]:
-                elementos.coelho.rect.x = portal.rect.x + 24
-                elementos.coelho.rect.y = portal.rect.y - 24
+            if fases < 3:
+                grade.reiniciarMapa()
+                Desenhar()
+                for portal in grade.gruposDeSprite["PortalDesativado"]:
+                    elementos.coelho.rect.x = portal.rect.x + 24
+                    elementos.coelho.rect.y = portal.rect.y - 24
+            else:
+                EmJogo = False
+                MenuAddRank = True
+
 
 
 
@@ -369,24 +373,14 @@ while JogoAtivo:
         if tempoEmJogo != tempoDiferencial:
             tempoDiferencial = tempoEmJogo
             pontuacao-=1
+            if pontuacao > 9999:
+                pontuacao = 9999
+            elif pontuacao < 0:
+                pontuacao = 0
 
-        if pontuacao > 9999:
-            pontuacao = 9999
-        elif pontuacao < 0:
-            pontuacao = 0
+        UI.gameHUD(screen,pontuacao)
 
-        painelPontuação = pontuacao
 
-        if painelPontuação >= 1000:
-            pass
-        elif painelPontuação >= 100:
-            painelPontuação = ("0" + str(painelPontuação))
-        elif painelPontuação >= 10:
-            painelPontuação = ("00" + str(painelPontuação))
-        elif painelPontuação >= 0:
-            painelPontuação = ("000" + str(painelPontuação))
-
-        screen.blit(font.render("%s" % str(painelPontuação), True, (117, 43, 0)), (1050, 0))
 
 
     ## Continuação Normal
@@ -399,6 +393,8 @@ while JogoAtivo:
         tempo = 0
 
     diferençatempo = -1
+
+    tilesDaTela.empty()
 
     pg.display.set_caption(str(int(clock.get_fps())))
     clock.tick(60)

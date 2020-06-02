@@ -55,7 +55,6 @@ class TexturasMapa():
                                 ]
 
     def carregarImagem(self,caminho):
-        print("Acessou")
         return pg.transform.scale(pg.image.load(caminho).convert(self.tela), (self.tamanhoTexturas, self.tamanhoTexturas))
 
     def TexturizarTile(self, tile):
