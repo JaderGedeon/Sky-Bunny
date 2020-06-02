@@ -11,6 +11,7 @@ class Jogador(pygame.sprite.Sprite):
         self.altura = 16
         self.largura = 16
         self.movimento = 16
+        self.stunTimer = 30
         self.direcao = [1, 2, 3, 4]
         # Chama a função para desenhar o Sprite
         self.desenho(x, y)
@@ -25,10 +26,14 @@ class Jogador(pygame.sprite.Sprite):
         self.andando = True
         self.levouDano = False
         self.morreu = False
+        self.stun = False
         # Variaveis para eventos personalizados
         self.DashCD = pygame.USEREVENT + 1
         self.DashFullCD = pygame.USEREVENT + 2
 
+    # ======================================================================================
+
+    # Função de desenho
     def desenho(self, x, y):
         self.image = pygame.Surface((self.largura, self.altura))
         self.image.fill(self.cor)
@@ -36,8 +41,21 @@ class Jogador(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
 
+    # ======================================================================================
+
     # Função para a Movimentação do Personagem
     def movimentoBasico(self):
+        # Stun
+        if self.stun is False:
+            self.andando = True
+            self.stunTimer = 10
+        if self.stun is True:
+            self.stunTimer -= 1
+            self.andando = False
+            if self.stunTimer == 0:
+                self.stun = False
+
+        # Movimentação
         tecla = pygame.key.get_pressed()
 
         if tecla[pygame.K_UP]:
@@ -60,6 +78,8 @@ class Jogador(pygame.sprite.Sprite):
             if self.andando is True:
                 self.rect.x += self.movimento
 
+    # ======================================================================================
+
     # Função para o Cool Down da Habilidade de Dahs
     def dashTimer(self):
         pygame.time.set_timer(self.DashCD, 8000)
@@ -81,6 +101,8 @@ class Jogador(pygame.sprite.Sprite):
             if evento.key == pygame.K_SPACE:
                 self.tempoAperta = time.time()
                 self.andando = False
+
+    # ======================================================================================
 
     # Função para a Habilidade de Pulo
     def puloCarregado(self, evento):
@@ -108,6 +130,8 @@ class Jogador(pygame.sprite.Sprite):
 
                 self.andando = True
                 self.pulo = 0
+
+    # ======================================================================================
 
     # Função para definição do HP e o sistema de Vidas
     def vida(self):

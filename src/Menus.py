@@ -210,9 +210,10 @@ class Menus:
                     tela.blit(UI.caminhoTextura[0], (250,210))
                     for rank in matriz:
                         print(rank)
-                        tela.blit(self.font2.render("%s..." % (rank[0]), True, (117,43,0)), (340, 240+(54*contador)))
+                        tela.blit(self.font2.render("%s" % (rank[0]), True, (117,43,0)), (340, 240+(54*contador)))
                         tela.blit(self.font2.render(rank[1], True, (117, 43, 0)), (660, 240 + (54 * contador)))
                         contador+=1
+
 
 
 

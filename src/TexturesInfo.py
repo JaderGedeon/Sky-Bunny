@@ -13,7 +13,7 @@ class Textura:
 
 class TexturasMapa:
 
-    tamanhoTexturas = 6
+    tamanhoTexturas = 64
     listaDeTexturas = []
 
     def __init__(self):
@@ -62,4 +62,6 @@ class TexturasMapa:
         for texturas in self.listaDeTexturas:
             if tile.formatoTile in texturas.formatoTextura and tile.tipoTerrenoTile == texturas.tipoTextura:
                 return texturas.caminhoTextura
+
+
 
