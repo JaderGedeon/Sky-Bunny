@@ -11,14 +11,14 @@ class Textura:
         self.caminhoTextura = caminhoTextura
         self.nomeTextura = nomeTextura
 
-class TexturasMapa:
+class TexturasMapa():
 
-    tamanhoTexturas = 6
+    tamanhoTexturas = 64
     listaDeTexturas = []
 
-    def __init__(self):
+    def __init__(self,tela):
 
-        #
+        self.tela = tela
         #
         #
         #
@@ -55,7 +55,7 @@ class TexturasMapa:
                                 ]
 
     def carregarImagem(self,caminho):
-        return pg.transform.scale(pg.image.load(caminho), (self.tamanhoTexturas, self.tamanhoTexturas))
+        return pg.transform.scale(pg.image.load(caminho).convert(self.tela), (self.tamanhoTexturas, self.tamanhoTexturas))
 
     def TexturizarTile(self, tile):
         random.shuffle(self.listaDeTexturas)
