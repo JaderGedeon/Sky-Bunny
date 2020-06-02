@@ -14,7 +14,7 @@ class IslandsInfo:
         self.alturaIlha = alturaIlha
 
 class MapGenerator:
-    texturizador = TexturesInfo.TexturasMapa()
+    texturizador = 0
 
     inimigos = []
 
@@ -46,9 +46,12 @@ class MapGenerator:
         "comprimento": 15, #Fica em 0, tá aqui para caso precisarmos fazer alguma mudança
     }
 
-    def __init__(self, comprimento, altura):
+    def __init__(self, comprimento, altura,screen):
         self.comprimento = comprimento
         self.altura = altura
+        self.screen = screen
+
+        self.texturizador = TexturesInfo.TexturasMapa(screen)
 
         # Cria um mapa com tamanho X e Y baseados nos valores de inicialização
         self.mapa = [[TileInfo.Tile(None,"","",0,0,0) for x in range(comprimento)] for y in range(altura)]
@@ -348,6 +351,8 @@ class MapGenerator:
     def reiniciarMapa(self):
         self.mapa = [[TileInfo.Tile(None,"","",0,0,0) for x in range(self.comprimento)] for y in range(self.altura)]
         MapGenerator.popularMapa(self)
+        for grupo in self.gruposDeSprite:
+            self.gruposDeSprite[grupo].empty()
 
 
     def povoarInimigos(self):

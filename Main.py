@@ -24,7 +24,10 @@ from src.Elementos_Personagens.Elementos import Personagens
 
 pg.init()
 
-grade = MG.MapGenerator(85,120)
+WINDOW_SIZE = [1280, 720]
+screen = pg.display.set_mode(WINDOW_SIZE)
+
+grade = MG.MapGenerator(80,110,screen)
 grade.inicializarIlhas()
 grade.popularMapa()
 grade.texturizarMapa()
@@ -35,9 +38,6 @@ pontuador.lerPontuação()
 TamanhoTile = grade.texturizador.tamanhoTexturas
 
 UI = MN.Menus()
-
-WINDOW_SIZE = [1280, 720]
-screen = pg.display.set_mode(WINDOW_SIZE)
 
 pg.display.set_caption("RODA MEU DEUS")
 
@@ -117,6 +117,15 @@ def ReiniciarJogo():
     tempoInicial = pg.time.get_ticks()
     global EmJogo
     EmJogo = True
+    global fases
+    fases = 0
+
+bg = pg.Surface((1280, 720))
+bg.fill((255, 218, 255))
+
+tilesDaTela = pg.sprite.Group()
+
+fases = 0
 
 def Movimento():
     elementos.coelho.movimentoBasico()
@@ -132,7 +141,6 @@ def Movimento():
 def DeteccaoDeDano():
     elementos.coelho.vida()
     elementos.hit()
-
 
 while JogoAtivo:
     event: object
@@ -163,6 +171,11 @@ while JogoAtivo:
                         #Inicia o jogo
                         if contadorIndexMenu == 1:
                             ReiniciarJogo()
+                            for sprite in grade.grupoTiles:
+                                sprite.image.convert()
+                            for portal in grade.gruposDeSprite["PortalDesativado"]:
+                                elementos.coelho.rect.x = portal.rect.x+24
+                                elementos.coelho.rect.y = portal.rect.y-24
 
                         # Load
                         if contadorIndexMenu == 2:
@@ -200,7 +213,6 @@ while JogoAtivo:
 
                     # SOM
                     if contadorIndexMenuOpções == 2:
-                        print(volume)
                         if event.key == pg.K_RIGHT:
                             if volume < 0.9:
                                 volume += 0.1
@@ -260,7 +272,6 @@ while JogoAtivo:
                             jogadorNome[contadorIndexLetraAddRank-1] = UI.SelecionarLetras(jogadorNome[contadorIndexLetraAddRank-1],-1)
                         if event.key == pg.K_DOWN:
                             jogadorNome[contadorIndexLetraAddRank-1] = UI.SelecionarLetras(jogadorNome[contadorIndexLetraAddRank-1 ],1)
-                        print(jogadorNome)
 
 
                 if event.type == pg.KEYDOWN:
@@ -320,23 +331,34 @@ while JogoAtivo:
 
     # Set the screen background
     if EmJogo == True:
-        screen.fill((255, 218, 255))
+        screen.blit(bg,(0,0))
+
+        CameraX = elementos.coelho.rect.x-1280/2
+        CameraY = elementos.coelho.rect.y-720/2
+
+        try:
+            for i in range(int((CameraY)/64),int((CameraY+784)/64)):
+                for j in range(int((CameraX) / 64), int((CameraX + 1344) / 64)):
+                    if grade.mapa[i][j].tipoTerrenoTile != "Céu":
+                        screen.blit(grade.mapa[i][j].texturaDoTile, (j * TamanhoTile - int(CameraX), i * TamanhoTile - int(CameraY)))
+                        tilesDaTela.add(grade.mapa[i][j])
+        except:
+            pass
+
         '''
-        screen.fill((255,218,255))
-        for i in range(len(grade.mapa)):
-            for j in range(len(grade.mapa[0])):
-                if grade.mapa[i][j].tipoTerrenoTile != "Céu":
-                    screen.blit(grade.mapa[i][j].texturaDoTile, (j * TamanhoTile-CameraX, i * TamanhoTile-CameraY))
+        for sprites in grade.grupoTiles:
+            if sprites.rect.x - int(CameraX) <= 1400 and sprites.rect.x - int(CameraX) >= -100 and\
+                    sprites.rect.y - int(CameraY) <= 850 and sprites.rect.y - int(CameraY) >= -100:
+                screen.blit(sprites.image,(sprites.rect.x-int(CameraX),sprites.rect.y-int(CameraY)))
         '''
 
-        for sprites in grade.grupoTiles:
-            screen.blit(sprites.image,(sprites.rect.x-CameraX,sprites.rect.y-CameraY))
 
         for inimigo in grade.inimigos:
             imagem = inimigo[0]
             imagem.fill(inimigo[2])
             retangulo = imagem.get_rect()
-            screen.blit(imagem, (inimigo[1][0]-CameraX,inimigo[1][1]-CameraY))
+            screen.blit(imagem, (inimigo[1][0]-int(CameraX),inimigo[1][1]-int(CameraY)))
+
 
     # =================================
 
@@ -344,29 +366,31 @@ while JogoAtivo:
         DeteccaoDeDano()
 
         #elementos.spritesGerais.draw(screen)
-
         for sprites in elementos.spritesGerais:
-            screen.blit(sprites.image,(sprites.rect.x-CameraX,sprites.rect.y-CameraY))
-
-        CameraX = elementos.coelho.rect.x-1280/2
-        CameraY = elementos.coelho.rect.y-720/2
+            screen.blit(sprites.image,(sprites.rect.x-int(CameraX),sprites.rect.y-int(CameraY)))
 
         pulando = False
         if not pulando:
-            hit = False
-            hit = pg.sprite.spritecollide(elementos.coelho, grade.grupoTiles, False)
+            hit = False #                                grade.grupoTiles
+            hit = pg.sprite.spritecollide(elementos.coelho,tilesDaTela, False)
             if not hit:
                 print("No céu")
 
         teleportando = False
         teleportando = pg.sprite.spritecollide(elementos.coelho, grade.gruposDeSprite["PortalAtivo"], False)
         if teleportando:
+            fases += 1
             screen.fill((255,255,255))
-            grade.reiniciarMapa()
-            Desenhar()
-            for portal in grade.gruposDeSprite["PortalDesativado"]:
-                elementos.coelho.rect.x = portal.rect.x
-                elementos.coelho.rect.y = portal.rect.y
+            if fases < 3:
+                grade.reiniciarMapa()
+                Desenhar()
+                for portal in grade.gruposDeSprite["PortalDesativado"]:
+                    elementos.coelho.rect.x = portal.rect.x + 24
+                    elementos.coelho.rect.y = portal.rect.y - 24
+            else:
+                EmJogo = False
+                MenuAddRank = True
+
 
 
 
@@ -374,27 +398,18 @@ while JogoAtivo:
     # ===================================
 
         tempoEmJogo = int((pg.time.get_ticks() - tempoInicial) / 1000)
+
         if tempoEmJogo != tempoDiferencial:
             tempoDiferencial = tempoEmJogo
             pontuacao-=1
+            if pontuacao > 9999:
+                pontuacao = 9999
+            elif pontuacao < 0:
+                pontuacao = 0
 
-        if pontuacao > 9999:
-            pontuacao = 9999
-        elif pontuacao < 0:
-            pontuacao = 0
+        UI.gameHUD(screen,pontuacao)
 
-        painelPontuação = pontuacao
 
-        if painelPontuação >= 1000:
-            pass
-        elif painelPontuação >= 100:
-            painelPontuação = ("0" + str(painelPontuação))
-        elif painelPontuação >= 10:
-            painelPontuação = ("00" + str(painelPontuação))
-        elif painelPontuação >= 0:
-            painelPontuação = ("000" + str(painelPontuação))
-
-        screen.blit(font.render("%s" % str(painelPontuação), True, (117, 43, 0)), (1050, 0))
 
 
     ## Continuação Normal
@@ -408,7 +423,16 @@ while JogoAtivo:
 
     diferençatempo = -1
 
+    tilesDaTela.empty()
+
     pg.display.set_caption(str(int(clock.get_fps())))
-    clock.tick(30)
+    clock.tick(60)
     pg.display.flip()
+
+
+
+
+
+
+
 

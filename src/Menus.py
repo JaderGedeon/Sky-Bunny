@@ -17,7 +17,7 @@ class Menus:
 
     def __init__(self):
         self.listaDeTexturas = [
-            TexturaUI(0, "Background", pg.transform.scale(pg.image.load("texturas/interfaces/Fundo_Menu.png"), (304*4, 208*4))),
+            TexturaUI(0, "Background", pg.transform.scale(pg.image.load("texturas/interfaces/Fundo_Menu.png"), (323*4, 208*4))),
 
             TexturaUI(1, "MenuInicial", [self.carregarImagem("texturas/interfaces/StartOff.png"),self.carregarImagem("texturas/interfaces/StartOn.png")]),
             TexturaUI(2, "MenuInicial", [self.carregarImagem("texturas/interfaces/LoadOff.png"),self.carregarImagem("texturas/interfaces/LoadOn.png")]),
@@ -45,6 +45,10 @@ class Menus:
             TexturaUI(4, "MenuAddRank", [self.carregarImagem("texturas/interfaces/SaveOff.png"),self.carregarImagem("texturas/interfaces/SaveOn.png")]),
             TexturaUI(5, "MenuAddRank", [self.carregarImagem("texturas/interfaces/SkipOff.png"),self.carregarImagem("texturas/interfaces/SkipOn.png")]),
         ]
+
+        self.listaDeTexturasHUD = [
+            TexturaUI(1, "GameHud", [pg.transform.scale(pg.image.load("texturas/interfaces/RankTable.png"), (60 * 4, 19 * 4))]),
+            ]
 
         self.dicionarioLetras = {1: "A",
                                  2: "B",
@@ -213,6 +217,30 @@ class Menus:
                         tela.blit(self.font2.render("%s" % (rank[0]), True, (117,43,0)), (340, 240+(54*contador)))
                         tela.blit(self.font2.render(rank[1], True, (117, 43, 0)), (660, 240 + (54 * contador)))
                         contador+=1
+
+    def gameHUD(self, tela,painelPontuação):
+
+        ArrayPontos = []
+
+        if painelPontuação >= 1000:
+            ArrayPontos = list(str(painelPontuação))
+        elif painelPontuação >= 100:
+            ArrayPontos = list("0" + str(painelPontuação))
+        elif painelPontuação >= 10:
+            ArrayPontos = list("00" + str(painelPontuação))
+        elif painelPontuação >= 0:
+            ArrayPontos = list("000" + str(painelPontuação))
+
+        contador = 1
+
+
+        for HUD in self.listaDeTexturasHUD:
+            if HUD.idTextura == 1:
+                tela.blit(HUD.caminhoTextura[0], (1030, 10))
+                for numero in ArrayPontos:
+                    tela.blit(self.font2.render(numero, True, (117, 43, 0)), (975 + (60 * contador), 10))
+                    contador += 1
+
 
 
 
