@@ -22,7 +22,10 @@ import random
 
 pg.init()
 
-grade = MG.MapGenerator(80,110)
+WINDOW_SIZE = [1280, 720]
+screen = pg.display.set_mode(WINDOW_SIZE)
+
+grade = MG.MapGenerator(80,110,screen)
 grade.inicializarIlhas()
 grade.popularMapa()
 grade.texturizarMapa()
@@ -33,9 +36,6 @@ pontuador.lerPontuação()
 TamanhoTile = grade.texturizador.tamanhoTexturas
 
 UI = MN.Menus()
-
-WINDOW_SIZE = [1280, 720]
-screen = pg.display.set_mode(WINDOW_SIZE)
 
 pg.display.set_caption("RODA MEU DEUS")
 
@@ -139,6 +139,8 @@ while JogoAtivo:
                         #Inicia o jogo
                         if contadorIndexMenu == 1:
                             ReiniciarJogo()
+                            for sprite in grade.grupoTiles:
+                                sprite.image.convert()
                             for portal in grade.gruposDeSprite["PortalDesativado"]:
                                 elementos.coelho.rect.x = portal.rect.x+24
                                 elementos.coelho.rect.y = portal.rect.y-24
@@ -297,22 +299,32 @@ while JogoAtivo:
         CameraY = elementos.coelho.rect.y-720/2
 
         contador = 0
-        for sprites in grade.grupoTiles:
-            if sprites.rect.x - int(CameraX) <= 1400 and sprites.rect.x - int(CameraX) >= -100 and\
-                    sprites.rect.y - int(CameraY) <= 850 and sprites.rect.y - int(CameraY) >= -100:
+
+        try:
+            for i in range(int((CameraY)/64),int((CameraY+784)/64)):
+                for j in range(int((CameraX) / 64), int((CameraX + 1344) / 64)):
+                    contador += 1
+                    if grade.mapa[i][j].tipoTerrenoTile != "Céu":
+                        screen.blit(grade.mapa[i][j].texturaDoTile, (j * TamanhoTile - CameraX, i * TamanhoTile - CameraY))
                 contador += 1
-                screen.blit(sprites.image,(sprites.rect.x-int(CameraX),sprites.rect.y-int(CameraY)))
+        except:
+            pass
 
         print(contador)
 
-
         '''
+        for sprites in grade.grupoTiles:
+            if sprites.rect.x - int(CameraX) <= 1400 and sprites.rect.x - int(CameraX) >= -100 and\
+                    sprites.rect.y - int(CameraY) <= 850 and sprites.rect.y - int(CameraY) >= -100:
+                screen.blit(sprites.image,(sprites.rect.x-int(CameraX),sprites.rect.y-int(CameraY)))
+        '''
+
+
         for inimigo in grade.inimigos:
             imagem = inimigo[0]
             imagem.fill(inimigo[2])
             retangulo = imagem.get_rect()
             screen.blit(imagem, (inimigo[1][0]-int(CameraX),inimigo[1][1]-int(CameraY)))
-        '''
 
 
     # =================================
@@ -327,14 +339,15 @@ while JogoAtivo:
         for sprites in elementos.spritesGerais:
             screen.blit(sprites.image,(sprites.rect.x-int(CameraX),sprites.rect.y-int(CameraY)))
 
-
         pulando = False
         if not pulando:
             hit = False
             hit = pg.sprite.spritecollide(elementos.coelho, grade.grupoTiles, False)
             if not hit:
                 pass
-                #print("No céu")
+                print("No céu")
+
+        print(grade.gruposDeSprite["PortalAtivo"])
 
         teleportando = False
         teleportando = pg.sprite.spritecollide(elementos.coelho, grade.gruposDeSprite["PortalAtivo"], False)
@@ -388,7 +401,7 @@ while JogoAtivo:
     diferençatempo = -1
 
     pg.display.set_caption(str(int(clock.get_fps())))
-    clock.tick(30)
+    clock.tick(60)
     pg.display.flip()
 
 
