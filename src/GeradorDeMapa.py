@@ -360,23 +360,29 @@ class MapGenerator:
 
         for conjIlhas in self.conjuntoIlhas:
             if conjIlhas[0].idIlha > 2:
-                pesoIlha = 15 #random.randint(15, 20)
-                #random.shuffle(coordenadasIlhas)
+                pesoIlha = random.randint(15, 20)
+                chanceCenoura = random.randint(1,4)
 
                 while pesoIlha != 0:
                     inimigoSelecionador = random.randint(1, 3)
                     random.shuffle(conjIlhas)
                     if conjIlhas[0].formatoTile == "Centro":
-                        if pesoIlha >= 5 and inimigoSelecionador == 1:
-                            pesoIlha -= 5
-                            self.elementos.chargersGroup(conjIlhas[0].xTile,conjIlhas[0].yTile)
-                            print("Desenhou")
+                        if chanceCenoura == 4:
+                            chanceCenoura = 0
+                            self.elementos.coletavelGroup(conjIlhas[0].xTile, conjIlhas[0].yTile)
+                        if pesoIlha >= 9 and inimigoSelecionador == 1:
+                            pesoIlha -= 9
+                            self.elementos.chargersGroup(conjIlhas[0].xTile,conjIlhas[0].yTile,conjIlhas[0].idIlha)
                             #self.inimigos.append([pygame.Surface((32, 32)),(conjIlhas[0].xTile,conjIlhas[0].yTile),(25,150,255)])
-                        elif pesoIlha >= 3 and inimigoSelecionador == 2:
+                        elif pesoIlha >= 6 and inimigoSelecionador == 2:
+                            pesoIlha -=6
+                            self.elementos.cenourideoGroup(conjIlhas[0].xTile, conjIlhas[0].yTile,conjIlhas[0].idIlha)
+                            #self.inimigos.append([pygame.Surface((32, 32)),(conjIlhas[0].xTile,conjIlhas[0].yTile),(255,137,0)])
+                        elif pesoIlha >= 3:
                             pesoIlha -=3
-                            self.inimigos.append([pygame.Surface((32, 32)),(conjIlhas[0].xTile,conjIlhas[0].yTile),(255,137,0)])
-                        elif pesoIlha >= 1:
-                            pesoIlha -=1
-                            self.inimigos.append([pygame.Surface((32, 32)),(conjIlhas[0].xTile,conjIlhas[0].yTile),(125,30,0)])
+                            self.elementos.cenourasGroup(conjIlhas[0].xTile, conjIlhas[0].yTile,conjIlhas[0].idIlha)
+                            #self.inimigos.append([pygame.Surface((32, 32)),(conjIlhas[0].xTile,conjIlhas[0].yTile),(125,30,0)])
+                        else:
+                            pesoIlha = 0
 
 

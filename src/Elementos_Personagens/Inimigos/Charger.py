@@ -1,7 +1,7 @@
 import pygame, math, random
 
 class Charger(pygame.sprite.Sprite):
-    def __init__(self, coelho, x, y):
+    def __init__(self, coelho, x, y,idIlha):
         pygame.sprite.Sprite.__init__(self)
         self.cor = (0, 255, 0)
         self.x = x
@@ -25,6 +25,8 @@ class Charger(pygame.sprite.Sprite):
         self.andando = False
         self.investida = pygame.USEREVENT + 3
         self.investidaStop = pygame.USEREVENT + 4
+
+        self.qualIlha = idIlha
 
     # ======================================================================================
 
@@ -55,7 +57,6 @@ class Charger(pygame.sprite.Sprite):
     def movimentoBasico(self):
         global coelho
         if self.andando is False:
-            print("foizzz")
             self.coelhoX = self.coelho.rect.x
             self.coelhoY = self.coelho.rect.y
             self.angulo = math.atan2((self.rect.y - self.coelhoY), (self.rect.x - self.coelhoX))
@@ -63,7 +64,6 @@ class Charger(pygame.sprite.Sprite):
         if self.coelho.morreu is True:
             self.andando = False
         if self.andando is True:
-            print("foiddd")
             if self.rect.x < self.coelhoX:
                 self.selectX = self.direcao[0]
                 self.rect.x -= self.movimento*math.cos(self.angulo)

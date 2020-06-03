@@ -13,6 +13,8 @@ class Teia(pygame.sprite.Sprite):
         self.cenourideo = cenourideo
         self.coelho = coelho
 
+        self.qualIlha = cenourideo.qualIlha
+
         self.desenho()
 
         self.resetar = True

@@ -27,9 +27,12 @@ class Jogador(pygame.sprite.Sprite):
         self.levouDano = False
         self.morreu = False
         self.stun = False
+        self.puloAtivo = True
         # Variaveis para eventos personalizados
         self.DashCD = pygame.USEREVENT + 1
         self.DashFullCD = pygame.USEREVENT + 2
+        # Ilha em que o coelho está
+        self.qualIlha = -1
 
     # ======================================================================================
 
@@ -47,12 +50,14 @@ class Jogador(pygame.sprite.Sprite):
     def movimentoBasico(self):
         # Stun
         if self.stun is False:
-            self.andando = True
             self.stunTimer = 10
         if self.stun is True:
             self.stunTimer -= 1
+            self.puloAtivo = False
             self.andando = False
-            if self.stunTimer == 0:
+            if self.stunTimer == 0 or self.levouDano is True:
+                self.andando = True
+                self.puloAtivo = True
                 self.stun = False
 
         # Movimentação
@@ -98,16 +103,17 @@ class Jogador(pygame.sprite.Sprite):
                 print("Pulo resetado")
 
         if evento.type == pygame.KEYDOWN:
-            if evento.key == pygame.K_SPACE:
+            if evento.key == pygame.K_SPACE and self.puloAtivo is True:
                 self.tempoAperta = time.time()
                 self.andando = False
+                self.puloAtivo = True
 
     # ======================================================================================
 
     # Função para a Habilidade de Pulo
     def puloCarregado(self, evento):
         if evento.type == pygame.KEYUP:
-            if evento.key == pygame.K_SPACE:
+            if evento.key == pygame.K_SPACE and self.puloAtivo is True:
                 tempoSolta = time.time()
                 tempoTotal = int(tempoSolta - self.tempoAperta)
                 print(tempoTotal)
@@ -120,13 +126,13 @@ class Jogador(pygame.sprite.Sprite):
                     self.pulo = 4
 
                 if self.select == 1:
-                    self.rect.y -= self.pulo*self.movimento
+                    self.rect.y -= self.pulo*self.movimento*5
                 elif self.select == 2:
-                    self.rect.y += self.pulo*self.movimento
+                    self.rect.y += self.pulo*self.movimento*5
                 elif self.select == 3:
-                    self.rect.x -= self.pulo*self.movimento
+                    self.rect.x -= self.pulo*self.movimento*5
                 elif self.select == 4:
-                    self.rect.x += self.pulo*self.movimento
+                    self.rect.x += self.pulo*self.movimento*5
 
                 self.andando = True
                 self.pulo = 0
