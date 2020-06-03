@@ -32,23 +32,23 @@ class Personagens:
     def jogadorGroup(self, x, y):
         self.coelho = Jogador.Jogador(x, y)
 
-    def cenourasGroup(self,x,y):
+    def cenourasGroup(self,x,y,idIlha):
         #for charger in range(1):
-            self.cenoura = Cenoura.Cenoura(self.coelho,x,y)
+            self.cenoura = Cenoura.Cenoura(self.coelho,x,y,idIlha)
             self.cenouras.add(self.cenoura)
             self.inimigosSprite.add(self.cenouras)
             self.spritesGerais.add(self.inimigosSprite)
 
-    def chargersGroup(self,x,y):
+    def chargersGroup(self,x,y,idIlha):
         #for charger in range(100):
-            self.charger = Charger.Charger(self.coelho,x,y)
+            self.charger = Charger.Charger(self.coelho,x,y,idIlha)
             self.chargers.add(self.charger)
             self.inimigosSprite.add(self.chargers)
             self.spritesGerais.add(self.inimigosSprite)
 
-    def cenourideoGroup(self,x,y):
+    def cenourideoGroup(self,x,y,idIlha):
         #for charger in range(1):
-            self.cenourideo = Cenourideo.Cenourideo(self.coelho,x,y)
+            self.cenourideo = Cenourideo.Cenourideo(self.coelho,x,y,idIlha)
             self.cenourideos.add(self.cenourideo)
             self.inimigosSprite.add(self.cenourideos)
             self.spritesGerais.add(self.inimigosSprite)
@@ -56,11 +56,11 @@ class Personagens:
             self.teia = Teia.Teia(self.coelho, self.cenourideo)
             self.tirosSprite.add(self.teia)
 
-    def coletavelGroup(self):
+    def coletavelGroup(self,x,y):
         #for coletavel in range(5):
-            self.cenourinha = Cenourinha.Cenourinha(self.coelho)
+            self.cenourinha = Cenourinha.Cenourinha(self.coelho,x,y)
             self.cenourinhas.add(self.cenourinha)
-            self.coletaveis.add(self.cenoura)
+            #self.coletaveis.add(self.cenoura)
 
     def hit(self):
         self.coelho.levouDano = False
@@ -90,4 +90,4 @@ class Personagens:
             self.coelho.stun = True
             self.cenourideo.tirosCount = 4
 
-        coleta = pygame.sprite.spritecollide(self.coelho, self.coletaveis, True)
+        #coleta = pygame.sprite.spritecollide(self.coelho, self.cenourinhas, True)

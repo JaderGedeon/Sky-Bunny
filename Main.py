@@ -116,13 +116,17 @@ fases = 0
 def Movimento():
     elementos.coelho.movimentoBasico()
     for cenourasVoadoras in elementos.cenouras:
-        cenourasVoadoras.movimentoBasico()
+        if cenourasVoadoras.qualIlha == elementos.coelho.qualIlha:
+            cenourasVoadoras.movimentoBasico()
     for charger in elementos.chargers:
-        charger.movimentoBasico()
+        if charger.qualIlha == elementos.coelho.qualIlha:
+            charger.movimentoBasico()
     for tiro in elementos.tirosSprite:
-        tiro.movimentoBasico()
+        if tiro.qualIlha == elementos.coelho.qualIlha:
+            tiro.movimentoBasico()
     for cenourideo in elementos.cenourideos:
-        cenourideo.movimentoBasico()
+        if cenourideo.qualIlha == elementos.coelho.qualIlha:
+            cenourideo.movimentoBasico()
 
 def DeteccaoDeDano():
     elementos.coelho.vida()
@@ -166,6 +170,8 @@ def reiniciarPartida():
     for grupo in grade.gruposDeSprite:
         grade.gruposDeSprite[grupo].empty()
     grade.grupoTiles.empty()
+    elementos.cenourinhas.empty()
+    elementos.coletaveis.empty()
 
     elementos.coelho.__init__(tamanhoTela['x'],tamanhoTela['y'])
 
@@ -198,6 +204,7 @@ def reiniciarPartida():
 
 def reiniciarFase():
     global fases
+    global pontuacao
 
     if fases < 3:
         elementos.chargers.empty()
@@ -206,6 +213,8 @@ def reiniciarFase():
         elementos.cenouras.empty()
         elementos.inimigosSprite.empty()
         grade.grupoTiles.empty()
+        elementos.cenourinhas.empty()
+        elementos.coletaveis.empty()
 
         grade.reiniciarMapa()
         Desenhar()
@@ -213,11 +222,18 @@ def reiniciarFase():
         trocarMenu("Jogo")
 
         elementos.coelho.hp = 3
+        pontuacao += 100
+
+        elementos.coelho.stun = False
+        elementos.coelho.pulo = 0
+        elementos.coelho.puloDelay = 0
 
         for portal in grade.gruposDeSprite["PortalDesativado"]:
             elementos.coelho.rect.x = portal.rect.x + 24
             elementos.coelho.rect.y = portal.rect.y - 24
+
     else:
+        pontuacao += 1000
         fases = 0
         trocarMenu("AdicionarRanking")
 
@@ -413,9 +429,11 @@ while JogoAtivo:
             elementos.coelho.dashEvento(event)
             elementos.coelho.puloCarregado(event)
             for sprites in elementos.chargers:
-                sprites.investidaEvento(event)
+                if sprites.qualIlha == elementos.coelho.qualIlha:
+                    sprites.investidaEvento(event)
             for sprites in elementos.cenouras:
-                sprites.ativacaoEvento(event)
+                if sprites.qualIlha == elementos.coelho.qualIlha:
+                    sprites.ativacaoEvento(event)
             for sprites in elementos.tirosSprite:
                 sprites.tiroDistanciaEvento(event)
 
@@ -444,17 +462,30 @@ while JogoAtivo:
         for sprites in elementos.inimigosSprite:
             screen.blit(sprites.image,(sprites.rect.x-int(CameraX),sprites.rect.y-int(CameraY)))
 
+        for coletavel in elementos.cenourinhas:
+            screen.blit(coletavel.image, (coletavel.rect.x - int(CameraX), coletavel.rect.y - int(CameraY)))
+
         for tiro in elementos.tirosSprite:
             screen.blit(tiro.image, (tiro.rect.x - int(CameraX), tiro.rect.y - int(CameraY)))
 
         screen.blit(elementos.coelho.image,(elementos.coelho.rect.x-int(CameraX),elementos.coelho.rect.y-int(CameraY)))
 
-        pulando = False
-        if not pulando:
-            hit = False #                                grade.grupoTiles
-            hit = pg.sprite.spritecollide(elementos.coelho,tilesDaTela, False)
-            if not hit:
-                elementos.coelho.vidas-=1
+
+        hit = False #                                grade.grupoTiles
+        hit = pg.sprite.spritecollide(elementos.coelho,tilesDaTela, False)
+        if not hit:
+            pass
+            #elementos.coelho.vidas -= 1
+
+        try:
+            elementos.coelho.qualIlha = hit[0].idIlha
+        except:
+            elementos.coelho.qualIlha = -1
+
+
+        coletou = pg.sprite.spritecollide(elementos.coelho,elementos.cenourinhas,True)
+        if coletou:
+            pontuacao += 50
 
         teleportando = False
         teleportando = pg.sprite.spritecollide(elementos.coelho, grade.gruposDeSprite["PortalAtivo"], False)
@@ -487,7 +518,7 @@ while JogoAtivo:
 
 
 
-    print("HP: %s  ///  Vidas: %s" % (elementos.coelho.hp,elementos.coelho.vidas))
+    #print("HP: %s  ///  Vidas: %s" % (elementos.coelho.hp,elementos.coelho.vidas))
 
     screen.blit(pg.image.load('texturas/tiles/ruina/Ruina.png').convert(),(200,0+(int(tempo*0.1))))
 

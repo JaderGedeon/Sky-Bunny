@@ -31,6 +31,8 @@ class Jogador(pygame.sprite.Sprite):
         # Variaveis para eventos personalizados
         self.DashCD = pygame.USEREVENT + 1
         self.DashFullCD = pygame.USEREVENT + 2
+        # Ilha em que o coelho está
+        self.qualIlha = -1
 
     # ======================================================================================
 

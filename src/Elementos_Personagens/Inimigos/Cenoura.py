@@ -1,7 +1,7 @@
 import pygame, math
 
 class Cenoura(pygame.sprite.Sprite):
-    def __init__(self, coelho,x,y):
+    def __init__(self, coelho,x,y,idIlha):
         pygame.sprite.Sprite.__init__(self)
         self.cor = (255, 0, 0)
         self.x = x
@@ -20,6 +20,8 @@ class Cenoura(pygame.sprite.Sprite):
         self.ativo = False
 
         self.ativoEvento = pygame.USEREVENT + 7
+
+        self.qualIlha = idIlha
 
     # ======================================================================================
 

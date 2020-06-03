@@ -3,7 +3,7 @@ import pygame, math
 from src.Elementos_Personagens.Tiros import Teia
 
 class Cenourideo(pygame.sprite.Sprite):
-    def __init__(self, coelho,x,y):
+    def __init__(self, coelho,x,y,idIlha):
         pygame.sprite.Sprite.__init__(self)
         self.cor = (0, 0, 255)
         self.x = x
@@ -17,6 +17,8 @@ class Cenourideo(pygame.sprite.Sprite):
         self.tirosCount = 1
         self.moveCount = 0
         self.desenho()
+
+        self.qualIlha = idIlha
 
         self.teia = Teia.Teia(coelho, self)
 
