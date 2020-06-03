@@ -3,11 +3,11 @@ import pygame, math
 from src.Elementos_Personagens.Tiros import Teia
 
 class Cenourideo(pygame.sprite.Sprite):
-    def __init__(self, coelho):
+    def __init__(self, coelho,x,y):
         pygame.sprite.Sprite.__init__(self)
         self.cor = (0, 0, 255)
-        self.x = 100
-        self.y = 500
+        self.x = x
+        self.y = y
         self.altura = 16
         self.largura = 16
         self.movimento = 8

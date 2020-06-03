@@ -28,11 +28,12 @@ class Personagens:
     def jogadorGroup(self, x, y):
         self.coelho = Jogador.Jogador(x, y)
 
-    def cenourasGroup(self):
-        for charger in range(1):
-            self.cenoura = Cenoura.Cenoura(self.coelho)
+    def cenourasGroup(self,x,y):
+        #for charger in range(1):
+            self.cenoura = Cenoura.Cenoura(self.coelho,x,y)
             self.cenouras.add(self.cenoura)
             self.inimigosSprite.add(self.cenouras)
+            self.spritesGerais.add(self.inimigosSprite)
 
     def chargersGroup(self,x,y):
         #for charger in range(100):
@@ -41,11 +42,12 @@ class Personagens:
             self.inimigosSprite.add(self.chargers)
             self.spritesGerais.add(self.inimigosSprite)
 
-    def cenourideoGroup(self):
-        for charger in range(1):
-            self.cenourideo = Cenourideo.Cenourideo(self.coelho)
+    def cenourideoGroup(self,x,y):
+        #for charger in range(1):
+            self.cenourideo = Cenourideo.Cenourideo(self.coelho,x,y)
             self.cenourideos.add(self.cenourideo)
             self.inimigosSprite.add(self.cenourideos)
+            self.spritesGerais.add(self.inimigosSprite)
 
             self.teia = Teia.Teia(self.coelho, self.cenourideo)
             self.tirosSprite.add(self.teia)

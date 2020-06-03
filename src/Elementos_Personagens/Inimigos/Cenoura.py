@@ -1,11 +1,11 @@
 import pygame
 
 class Cenoura(pygame.sprite.Sprite):
-    def __init__(self, coelho):
+    def __init__(self, coelho,x,y):
         pygame.sprite.Sprite.__init__(self)
         self.cor = (255, 0, 0)
-        self.x = 200
-        self.y = 200
+        self.x = x
+        self.y = y
         self.altura = 16
         self.largura = 16
         self.movimento = 8
@@ -38,11 +38,14 @@ class Cenoura(pygame.sprite.Sprite):
     def ativacaoEvento(self, evento):
         global coelho
         if evento.type == self.ativoEvento:
+
             distancia = ((self.coelho.rect.x - self.rect.x), (self.coelho.rect.y - self.rect.y))
 
             if - distancia[0] < self.rangeMax > distancia[0]:
                 if - distancia[1] < self.rangeMax > distancia[1]:
                     self.ativo = True
+                    self.cor = (128, 128, 0)
+                    self.desenho()
 
     # ======================================================================================
 

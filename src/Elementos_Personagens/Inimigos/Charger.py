@@ -55,7 +55,6 @@ class Charger(pygame.sprite.Sprite):
     def movimentoBasico(self):
         global coelho
         if self.andando is False:
-            print("foizzz")
             self.coelhoX = self.coelho.rect.x
             self.coelhoY = self.coelho.rect.y
             self.angulo = math.atan2((self.rect.y - self.coelhoY), (self.rect.x - self.coelhoX))
@@ -63,7 +62,6 @@ class Charger(pygame.sprite.Sprite):
         if self.coelho.morreu is True:
             self.andando = False
         if self.andando is True:
-            print("foiddd")
             if self.rect.x < self.coelhoX:
                 self.selectX = self.direcao[0]
                 self.rect.x -= self.movimento*math.cos(self.angulo)

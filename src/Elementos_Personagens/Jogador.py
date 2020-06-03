@@ -27,6 +27,7 @@ class Jogador(pygame.sprite.Sprite):
         self.levouDano = False
         self.morreu = False
         self.stun = False
+        self.puloAtivo = False
         # Variaveis para eventos personalizados
         self.DashCD = pygame.USEREVENT + 1
         self.DashFullCD = pygame.USEREVENT + 2
@@ -46,7 +47,7 @@ class Jogador(pygame.sprite.Sprite):
     # Função para a Movimentação do Personagem
     def movimentoBasico(self):
         # Stun
-        if self.stun is False:
+        if self.stun is False and self.puloAtivo is False:
             self.andando = True
             self.stunTimer = 10
         if self.stun is True:
@@ -101,6 +102,7 @@ class Jogador(pygame.sprite.Sprite):
             if evento.key == pygame.K_SPACE:
                 self.tempoAperta = time.time()
                 self.andando = False
+                self.puloAtivo = True
 
     # ======================================================================================
 
@@ -120,13 +122,13 @@ class Jogador(pygame.sprite.Sprite):
                     self.pulo = 4
 
                 if self.select == 1:
-                    self.rect.y -= self.pulo*self.movimento
+                    self.rect.y -= self.pulo*self.movimento*5
                 elif self.select == 2:
-                    self.rect.y += self.pulo*self.movimento
+                    self.rect.y += self.pulo*self.movimento*5
                 elif self.select == 3:
-                    self.rect.x -= self.pulo*self.movimento
+                    self.rect.x -= self.pulo*self.movimento*5
                 elif self.select == 4:
-                    self.rect.x += self.pulo*self.movimento
+                    self.rect.x += self.pulo*self.movimento*5
 
                 self.andando = True
                 self.pulo = 0

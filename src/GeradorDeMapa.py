@@ -360,23 +360,26 @@ class MapGenerator:
 
         for conjIlhas in self.conjuntoIlhas:
             if conjIlhas[0].idIlha > 2:
-                pesoIlha = 15 #random.randint(15, 20)
+                pesoIlha = random.randint(15, 20)
                 #random.shuffle(coordenadasIlhas)
 
                 while pesoIlha != 0:
                     inimigoSelecionador = random.randint(1, 3)
                     random.shuffle(conjIlhas)
                     if conjIlhas[0].formatoTile == "Centro":
-                        if pesoIlha >= 5 and inimigoSelecionador == 1:
-                            pesoIlha -= 5
+                        if pesoIlha >= 9 and inimigoSelecionador == 1:
+                            pesoIlha -= 9
                             self.elementos.chargersGroup(conjIlhas[0].xTile,conjIlhas[0].yTile)
-                            print("Desenhou")
                             #self.inimigos.append([pygame.Surface((32, 32)),(conjIlhas[0].xTile,conjIlhas[0].yTile),(25,150,255)])
-                        elif pesoIlha >= 3 and inimigoSelecionador == 2:
+                        elif pesoIlha >= 6 and inimigoSelecionador == 2:
+                            pesoIlha -=6
+                            self.elementos.cenourideoGroup(conjIlhas[0].xTile, conjIlhas[0].yTile)
+                            #self.inimigos.append([pygame.Surface((32, 32)),(conjIlhas[0].xTile,conjIlhas[0].yTile),(255,137,0)])
+                        elif pesoIlha >= 3:
                             pesoIlha -=3
-                            self.inimigos.append([pygame.Surface((32, 32)),(conjIlhas[0].xTile,conjIlhas[0].yTile),(255,137,0)])
-                        elif pesoIlha >= 1:
-                            pesoIlha -=1
-                            self.inimigos.append([pygame.Surface((32, 32)),(conjIlhas[0].xTile,conjIlhas[0].yTile),(125,30,0)])
+                            self.elementos.cenourasGroup(conjIlhas[0].xTile, conjIlhas[0].yTile)
+                            #self.inimigos.append([pygame.Surface((32, 32)),(conjIlhas[0].xTile,conjIlhas[0].yTile),(125,30,0)])
+                        else:
+                            pesoIlha = 0
 
 

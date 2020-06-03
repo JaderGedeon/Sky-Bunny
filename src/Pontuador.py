@@ -28,8 +28,6 @@ class Pontuador:
                     self.matrizPontuação[i] = self.matrizPontuação[i + 1]
                     self.matrizPontuação[i + 1] = temp
 
-        print(self.matrizPontuação)
-
         with open("saves/rank.txt","w") as arquivoTxt:
             for rank in self.matrizPontuação:
                 arquivoTxt.write("%s %s\n" % (rank[0], rank[1]))

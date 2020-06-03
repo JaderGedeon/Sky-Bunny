@@ -44,6 +44,8 @@ class Menus:
             TexturaUI(3, "MenuAddRank", [pg.transform.scale(pg.image.load("texturas/interfaces/CharSelectorON.png"), (14 * 4, 52 * 4)),pg.transform.scale(pg.image.load("texturas/interfaces/CharSelectorOFF.png"), (14 * 4, 52 * 4))]),
             TexturaUI(4, "MenuAddRank", [self.carregarImagem("texturas/interfaces/SaveOff.png"),self.carregarImagem("texturas/interfaces/SaveOn.png")]),
             TexturaUI(5, "MenuAddRank", [self.carregarImagem("texturas/interfaces/SkipOff.png"),self.carregarImagem("texturas/interfaces/SkipOn.png")]),
+
+            TexturaUI(1, "Transicao",[pg.transform.scale(pg.image.load("texturas/interfaces/BunnyLifes.png"), (14 * 4, 20 * 4))]),
         ]
 
         self.listaDeTexturasHUD = [
@@ -213,7 +215,6 @@ class Menus:
                 if UI.idTextura == 2:
                     tela.blit(UI.caminhoTextura[0], (250,210))
                     for rank in matriz:
-                        print(rank)
                         tela.blit(self.font2.render("%s" % (rank[0]), True, (117,43,0)), (340, 240+(54*contador)))
                         tela.blit(self.font2.render(rank[1], True, (117, 43, 0)), (660, 240 + (54 * contador)))
                         contador+=1
@@ -241,6 +242,12 @@ class Menus:
                     tela.blit(self.font2.render(numero, True, (117, 43, 0)), (975 + (60 * contador), 10))
                     contador += 1
 
+    def gameTransicao(self, tela, vidas):
+        for UI in self.listaDeTexturas:
+            if UI.tipoTextura == "Transicao":
+                tela.fill((255, 255, 255))
+                tela.blit(UI.caminhoTextura[0], (640-40, 360-40))
+                tela.blit(self.font2.render("x%s" % (vidas), True, (0, 0, 0)), (680,360-30))
 
 
 
