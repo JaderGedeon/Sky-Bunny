@@ -11,6 +11,8 @@ class Cenourideo(pygame.sprite.Sprite):
         self.altura = 16
         self.largura = 16
         self.movimento = 8
+        self.knockback = 16
+        self.angulo = 0
 
         self.tirosCount = 1
         self.moveCount = 0
