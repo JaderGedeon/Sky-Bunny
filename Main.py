@@ -145,6 +145,18 @@ def reiniciarPartida():
     global pontuacao
     global tempoInicial
     global fases
+    global contadorIndexMenu
+    global contadorIndexMenuOpções
+    global contadorIndexMenuAddRank
+    global contadorIndexLetraAddRank
+    global jogadorNome
+
+    contadorIndexMenu = 1
+    contadorIndexMenuOpções = 1
+
+    contadorIndexMenuAddRank = 1
+    contadorIndexLetraAddRank = 1
+
 
     elementos.chargers.empty()
     elementos.cenourideos.empty()
@@ -159,6 +171,7 @@ def reiniciarPartida():
 
     fases = 0
     pontuacao = 1000
+    jogadorNome = ["A", "A", "A"]
     tempoInicial = pg.time.get_ticks()
 
 
@@ -199,6 +212,8 @@ def reiniciarFase():
 
         trocarMenu("Jogo")
 
+        elementos.coelho.hp = 3
+
         for portal in grade.gruposDeSprite["PortalDesativado"]:
             elementos.coelho.rect.x = portal.rect.x + 24
             elementos.coelho.rect.y = portal.rect.y - 24
@@ -211,7 +226,6 @@ def Morte():
     if elementos.coelho.vidas > 0:
         telaTransicao(0, "Fase")
     else:
-        print("Foi")
         elementos.coelho.vidas = 3
         trocarMenu("AdicionarRanking")
 
@@ -465,7 +479,7 @@ while JogoAtivo:
             elif pontuacao < 0:
                 pontuacao = 0
 
-        UI.gameHUD(screen,pontuacao)
+        UI.gameHUD(screen,pontuacao,elementos.coelho)
 
         if vidaAtual != elementos.coelho.vidas:
             vidaAtual = elementos.coelho.vidas
@@ -482,10 +496,7 @@ while JogoAtivo:
     if transicao == True:
         tempoTransicaoPassado = int((pg.time.get_ticks() - tempoTransicao) / 1000)
 
-        if qualComando == "Partida":
-            UI.gameTransicao(screen,3)
-        else:
-            UI.gameTransicao(screen, elementos.coelho.vidas)
+        UI.gameTransicao(screen, elementos.coelho)
 
         if tempoTransicaoPassado == 2:
             telaTransicao(1,"-")

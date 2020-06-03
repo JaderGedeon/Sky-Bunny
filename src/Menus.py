@@ -50,6 +50,7 @@ class Menus:
 
         self.listaDeTexturasHUD = [
             TexturaUI(1, "GameHud", [pg.transform.scale(pg.image.load("texturas/interfaces/RankTable.png"), (60 * 4, 19 * 4))]),
+            TexturaUI(2, "GameHud", [pg.transform.scale(pg.image.load("texturas/interfaces/Coracao.png"), (16 * 4, 15 * 4))]),
             ]
 
         self.dicionarioLetras = {1: "A",
@@ -128,7 +129,6 @@ class Menus:
                     tela.blit(UI.caminhoTextura[0], (250, 140))
                 if UI.idTextura == 2:
                     tela.blit(UI.caminhoTextura[0], (250,210))
-
 
     def menuAddRank(self, tela, index, indexLetra, jogadorLetra,pontuacao):
         tela.blit(self.listaDeTexturas[0].caminhoTextura, (-10,-50))
@@ -219,7 +219,7 @@ class Menus:
                         tela.blit(self.font2.render(rank[1], True, (117, 43, 0)), (660, 240 + (54 * contador)))
                         contador+=1
 
-    def gameHUD(self, tela,painelPontuação):
+    def gameHUD(self, tela,painelPontuação,coelho):
 
         ArrayPontos = []
 
@@ -241,13 +241,18 @@ class Menus:
                 for numero in ArrayPontos:
                     tela.blit(self.font2.render(numero, True, (117, 43, 0)), (975 + (60 * contador), 10))
                     contador += 1
+            contador = 1
+            if HUD.idTextura == 2:
+                for vida in range(coelho.hp):
+                    tela.blit(HUD.caminhoTextura[0], (-40+(50*contador), 10))
+                    contador += 1
 
-    def gameTransicao(self, tela, vidas):
+    def gameTransicao(self, tela, coelho):
         for UI in self.listaDeTexturas:
             if UI.tipoTextura == "Transicao":
-                tela.fill((255, 255, 255))
+                tela.fill((255, 218, 255))
                 tela.blit(UI.caminhoTextura[0], (640-40, 360-40))
-                tela.blit(self.font2.render("x%s" % (vidas), True, (0, 0, 0)), (680,360-30))
+                tela.blit(self.font2.render("x%s" % (coelho.vidas), True, (0, 0, 0)), (680,360-30))
 
 
 
