@@ -87,8 +87,8 @@ class Jogador(pygame.sprite.Sprite):
 
     # Função para o Cool Down da Habilidade de Dahs
     def dashTimer(self):
-        pygame.time.set_timer(self.DashCD, 8000)
-        pygame.time.set_timer(self.DashFullCD, 12000)
+        pygame.time.set_timer(self.DashCD, 4000)
+        pygame.time.set_timer(self.DashFullCD, 6000)
 
     # Função para a Habilidade de Dash
     def dashEvento(self, evento):

@@ -367,9 +367,6 @@ class MapGenerator:
                     inimigoSelecionador = random.randint(1, 3)
                     random.shuffle(conjIlhas)
                     if conjIlhas[0].formatoTile == "Centro":
-                        if chanceCenoura == 4:
-                            chanceCenoura = 0
-                            self.elementos.coletavelGroup(conjIlhas[0].xTile, conjIlhas[0].yTile)
                         if pesoIlha >= 9 and inimigoSelecionador == 1:
                             pesoIlha -= 9
                             self.elementos.chargersGroup(conjIlhas[0].xTile,conjIlhas[0].yTile,conjIlhas[0].idIlha)
@@ -382,6 +379,9 @@ class MapGenerator:
                             pesoIlha -=3
                             self.elementos.cenourasGroup(conjIlhas[0].xTile, conjIlhas[0].yTile,conjIlhas[0].idIlha)
                             #self.inimigos.append([pygame.Surface((32, 32)),(conjIlhas[0].xTile,conjIlhas[0].yTile),(125,30,0)])
+                        elif chanceCenoura == 4:
+                            chanceCenoura = 0
+                            self.elementos.coletavelGroup(conjIlhas[0].xTile, conjIlhas[0].yTile)
                         else:
                             pesoIlha = 0
 

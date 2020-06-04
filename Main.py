@@ -222,7 +222,6 @@ def reiniciarFase():
         trocarMenu("Jogo")
 
         elementos.coelho.hp = 3
-        pontuacao += 100
 
         elementos.coelho.stun = False
         elementos.coelho.pulo = 0
@@ -462,6 +461,7 @@ while JogoAtivo:
         for sprites in elementos.inimigosSprite:
             screen.blit(sprites.image,(sprites.rect.x-int(CameraX),sprites.rect.y-int(CameraY)))
 
+
         for coletavel in elementos.cenourinhas:
             screen.blit(coletavel.image, (coletavel.rect.x - int(CameraX), coletavel.rect.y - int(CameraY)))
 
@@ -474,8 +474,7 @@ while JogoAtivo:
         hit = False #                                grade.grupoTiles
         hit = pg.sprite.spritecollide(elementos.coelho,tilesDaTela, False)
         if not hit:
-            pass
-            #elementos.coelho.vidas -= 1
+            elementos.coelho.vidas -= 1
 
         try:
             elementos.coelho.qualIlha = hit[0].idIlha
@@ -487,12 +486,13 @@ while JogoAtivo:
         if coletou:
             pontuacao += 50
 
+
         teleportando = False
         teleportando = pg.sprite.spritecollide(elementos.coelho, grade.gruposDeSprite["PortalAtivo"], False)
         if teleportando:
             fases += 1
+            pontuacao += 100
             telaTransicao(0, "Fase")
-
 
 
 
@@ -520,8 +520,6 @@ while JogoAtivo:
 
     #print("HP: %s  ///  Vidas: %s" % (elementos.coelho.hp,elementos.coelho.vidas))
 
-    screen.blit(pg.image.load('texturas/tiles/ruina/Ruina.png').convert(),(200,0+(int(tempo*0.1))))
-
     # = = = = = TRANSIÇÃO AONDE APARECE AS VIDAS DO JOGADOR = = = = = #
 
     if transicao == True:
@@ -544,7 +542,7 @@ while JogoAtivo:
 
     diferençatempo = -1
 
-    pg.display.set_caption(str(int(clock.get_fps())))
+    pg.display.set_caption("Sky Bunny: In Nimbus Island | FPS: %s" % (str(int(clock.get_fps()))))
     clock.tick(30)
     pg.display.flip()
 

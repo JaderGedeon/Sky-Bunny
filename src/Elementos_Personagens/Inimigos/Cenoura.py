@@ -3,7 +3,7 @@ import pygame, math
 class Cenoura(pygame.sprite.Sprite):
     def __init__(self, coelho,x,y,idIlha):
         pygame.sprite.Sprite.__init__(self)
-        self.cor = (255, 0, 0)
+        self.cor = (118, 0, 0)
         self.x = x
         self.y = y
         self.altura = 16
@@ -48,7 +48,7 @@ class Cenoura(pygame.sprite.Sprite):
             if - distancia[0] < self.rangeMax > distancia[0]:
                 if - distancia[1] < self.rangeMax > distancia[1]:
                     self.ativo = True
-                    self.cor = (128, 128, 0)
+                    self.cor = (255, 0, 0)
                     self.desenho()
 
     # ======================================================================================
@@ -70,6 +70,6 @@ class Cenoura(pygame.sprite.Sprite):
                     self.rect.x -= self.movimento*math.cos(self.angulo)
 
                 if self.rect.y < self.coelho.rect.y:
-                    self.rect.y -= self.movimento*math.cos(self.angulo)
+                    self.rect.y -= self.movimento*math.sin(self.angulo)
                 if self.rect.y > self.coelho.rect.y:
-                    self.rect.y -= self.movimento*math.cos(self.angulo)
+                    self.rect.y -= self.movimento*math.sin(self.angulo)

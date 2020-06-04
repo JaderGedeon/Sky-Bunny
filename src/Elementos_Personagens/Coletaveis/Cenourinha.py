@@ -3,10 +3,10 @@ import pygame, random
 class Cenourinha(pygame.sprite.Sprite):
     def __init__(self, coelho,x,y):
         pygame.sprite.Sprite.__init__(self)
-        self.cor = (241, 91, 0)
+        self.cor = (255, 134, 0)
         self.x = x
         self.y = y
-        self.altura = 16
+        self.altura = 32
         self.largura = 16
         self.coelho = coelho
 

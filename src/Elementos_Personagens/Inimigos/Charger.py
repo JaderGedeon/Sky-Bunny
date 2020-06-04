@@ -3,7 +3,7 @@ import pygame, math, random
 class Charger(pygame.sprite.Sprite):
     def __init__(self, coelho, x, y,idIlha):
         pygame.sprite.Sprite.__init__(self)
-        self.cor = (0, 255, 0)
+        self.cor = (40, 140, 60)
         self.x = x
         self.y = y
         self.coelhoX = 0
