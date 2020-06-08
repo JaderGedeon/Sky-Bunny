@@ -31,12 +31,14 @@ class Personagens:
         self.spritesGerais.add(self.tirosSprite)
         self.spritesGerais.add(self.coelho)
         self.spritesGerais.add(self.cenourinhas)
+        self.spritesGerais.add(self.hitbox)
 
     def jogadorGroup(self, x, y):
         costas = pygame.image.load(path.join(self.imagens, "SkyBunny_Back.png"))
         frente = pygame.image.load(path.join(self.imagens, "SkyBunny_Front.png"))
         sprites = (costas, frente)
-        self.coelho = Jogador.Jogador(x, y, sprites)
+        self.hitbox = Jogador.Hitbox(x, y)
+        self.coelho = Jogador.Jogador(x, y, sprites, self.hitbox)
 
     def cenourasGroup(self,x,y,idIlha):
         costas = pygame.image.load(path.join(self.imagens, "Cenoura_Back.png"))
@@ -86,26 +88,35 @@ class Personagens:
         self.coelho.levouDano = False
         self.coelho.dano = 1
 
-        hit = pygame.sprite.spritecollide(self.coelho, self.inimigosSprite, False)
+        hit = pygame.sprite.spritecollide(self.hitbox, self.inimigosSprite, False)
         if hit:
             self.coelho.levouDano = True
 
-        hirCharger = pygame.sprite.spritecollide(self.coelho, self.chargers, False)
+        hirCharger = pygame.sprite.spritecollide(self.hitbox, self.chargers, False)
         if hirCharger:
             self.coelho.rect.x -= self.charger.knockback * math.cos(self.charger.angulo)
             self.coelho.rect.y -= self.charger.knockback * math.sin(self.charger.angulo)
 
-        hitCenoura = pygame.sprite.spritecollide(self.coelho, self.cenouras, False)
+            self.hitbox.rect.x -= self.charger.knockback * math.cos(self.charger.angulo)
+            self.hitbox.rect.y -= self.charger.knockback * math.sin(self.charger.angulo)
+
+        hitCenoura = pygame.sprite.spritecollide(self.hitbox, self.cenouras, False)
         if hitCenoura:
             self.coelho.rect.x -= self.cenoura.knockback * math.cos(self.cenoura.angulo)
             self.coelho.rect.y -= self.cenoura.knockback * math.sin(self.cenoura.angulo)
 
-        hitCenourideo = pygame.sprite.spritecollide(self.coelho, self.cenourideos, False)
+            self.hitbox.rect.x -= self.cenoura.knockback * math.cos(self.cenoura.angulo)
+            self.hitbox.rect.y -= self.cenoura.knockback * math.sin(self.cenoura.angulo)
+
+        hitCenourideo = pygame.sprite.spritecollide(self.hitbox, self.cenourideos, False)
         if hitCenourideo:
             self.coelho.rect.x -= self.cenourideo.knockback * math.cos(self.cenourideo.angulo)
             self.coelho.rect.y -= self.cenourideo.knockback * math.sin(self.cenourideo.angulo)
 
-        hitTeia = pygame.sprite.spritecollide(self.coelho, self.tirosSprite, False)
+            self.hitbox.rect.x -= self.cenourideo.knockback * math.cos(self.cenourideo.angulo)
+            self.hitbox.rect.y -= self.cenourideo.knockback * math.sin(self.cenourideo.angulo)
+
+        hitTeia = pygame.sprite.spritecollide(self.hitbox, self.tirosSprite, False)
         if hitTeia:
             self.coelho.stun = True
             self.cenourideo.tirosCount = 4
