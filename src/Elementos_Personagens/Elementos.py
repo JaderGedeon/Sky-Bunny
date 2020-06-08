@@ -1,4 +1,5 @@
-import pygame, math, random
+import pygame, math
+from os import path
 
 from src.Elementos_Personagens import Jogador
 from src.Elementos_Personagens.Inimigos import Cenoura, Charger, Cenourideo
@@ -7,7 +8,9 @@ from src.Elementos_Personagens.Tiros import Teia
 
 
 class Personagens:
-    def __init__(self, x, y):
+    def __init__(self, x, y, imagens):
+        self.imagens = imagens
+
         self.spritesGerais = pygame.sprite.Group()
         self.inimigosSprite = pygame.sprite.Group()
         self.coletaveis = pygame.sprite.Group()
@@ -30,36 +33,53 @@ class Personagens:
         self.spritesGerais.add(self.cenourinhas)
 
     def jogadorGroup(self, x, y):
-        self.coelho = Jogador.Jogador(x, y)
+        costas = pygame.image.load(path.join(self.imagens, "SkyBunny_Back.png"))
+        frente = pygame.image.load(path.join(self.imagens, "SkyBunny_Front.png"))
+        sprites = (costas, frente)
+        self.coelho = Jogador.Jogador(x, y, sprites)
 
     def cenourasGroup(self,x,y,idIlha):
+        costas = pygame.image.load(path.join(self.imagens, "Cenoura_Back.png"))
+        frente = pygame.image.load(path.join(self.imagens, "Cenoura_Front.png"))
+        sprites = (costas, frente)
+
         #for charger in range(1):
-            self.cenoura = Cenoura.Cenoura(self.coelho,x,y,idIlha)
-            self.cenouras.add(self.cenoura)
-            self.inimigosSprite.add(self.cenouras)
-            self.spritesGerais.add(self.inimigosSprite)
+        self.cenoura = Cenoura.Cenoura(self.coelho,x,y,idIlha, sprites)
+        self.cenouras.add(self.cenoura)
+        self.inimigosSprite.add(self.cenouras)
+        self.spritesGerais.add(self.inimigosSprite)
 
     def chargersGroup(self,x,y,idIlha):
+        costas = pygame.image.load(path.join(self.imagens, "Charger_Back.png"))
+        frente = pygame.image.load(path.join(self.imagens, "Charger_Front.png"))
+        sprites = (costas, frente)
+
         #for charger in range(100):
-            self.charger = Charger.Charger(self.coelho,x,y,idIlha)
-            self.chargers.add(self.charger)
-            self.inimigosSprite.add(self.chargers)
-            self.spritesGerais.add(self.inimigosSprite)
+        self.charger = Charger.Charger(self.coelho,x,y,idIlha, sprites)
+        self.chargers.add(self.charger)
+        self.inimigosSprite.add(self.chargers)
+        self.spritesGerais.add(self.inimigosSprite)
 
     def cenourideoGroup(self,x,y,idIlha):
-        #for charger in range(1):
-            self.cenourideo = Cenourideo.Cenourideo(self.coelho,x,y,idIlha)
-            self.cenourideos.add(self.cenourideo)
-            self.inimigosSprite.add(self.cenourideos)
-            self.spritesGerais.add(self.inimigosSprite)
+        costasCenourideo = pygame.image.load(path.join(self.imagens, "Cenourideo_Back.png"))
+        frenteCenourideo = pygame.image.load(path.join(self.imagens, "Cenourideo_Front.png"))
+        cenourideoSprites = (costasCenourideo, frenteCenourideo)
+        teiaSprites = pygame.image.load(path.join(self.imagens, "Teia.png"))
 
-            self.teia = Teia.Teia(self.coelho, self.cenourideo)
-            self.tirosSprite.add(self.teia)
+        #for charger in range(1):
+        self.cenourideo = Cenourideo.Cenourideo(self.coelho,x,y,idIlha, cenourideoSprites, teiaSprites)
+        self.cenourideos.add(self.cenourideo)
+        self.inimigosSprite.add(self.cenourideos)
+        self.spritesGerais.add(self.inimigosSprite)
+
+        self.teia = Teia.Teia(self.coelho, self.cenourideo, teiaSprites)
+        self.tirosSprite.add(self.teia)
 
     def coletavelGroup(self,x,y):
+        sprite = pygame.image.load(path.join(self.imagens, "Cenourinha.png"))
         #for coletavel in range(5):
-            self.cenourinha = Cenourinha.Cenourinha(self.coelho,x,y)
-            self.cenourinhas.add(self.cenourinha)
+        self.cenourinha = Cenourinha.Cenourinha(self.coelho,x,y, sprite)
+        self.cenourinhas.add(self.cenourinha)
             #self.coletaveis.add(self.cenoura)
 
     def hit(self):

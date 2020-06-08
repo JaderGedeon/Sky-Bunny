@@ -4,15 +4,15 @@ import pygame, time
 # Classe de definição do personagem SkyBunny
 class Jogador(pygame.sprite.Sprite):
     # Função de inicialização de variáveis
-    def __init__(self, x, y):
+    def __init__(self, x, y, sprites):
         pygame.sprite.Sprite.__init__(self) # Inicialização do Sprite
-        # Definição da coloração, tamanho e movimentação
-        self.cor = (255, 255, 255)
-        self.altura = 16
-        self.largura = 16
+        # Definição do sprite, tamanho e movimentação
+        self.altura = 64
+        self.largura = 64
         self.movimento = 16
         self.stunTimer = 30
         self.direcao = [1, 2, 3, 4]
+        self.sprites = sprites
         # Chama a função para desenhar o Sprite
         self.desenho(x, y)
         # Definições para o Pulo
@@ -38,8 +38,7 @@ class Jogador(pygame.sprite.Sprite):
 
     # Função de desenho
     def desenho(self, x, y):
-        self.image = pygame.Surface((self.largura, self.altura))
-        self.image.fill(self.cor)
+        self.image = pygame.transform.scale(self.sprites[0], (self.largura, self.altura))
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
@@ -65,11 +64,13 @@ class Jogador(pygame.sprite.Sprite):
 
         if tecla[pygame.K_UP]:
             self.select = self.direcao[0]
+            self.image = pygame.transform.scale(self.sprites[0], (self.largura, self.altura))
             if self.andando is True:
                 self.rect.y -= self.movimento
 
         if tecla[pygame.K_DOWN]:
             self.select = self.direcao[1]
+            self.image = pygame.transform.scale(self.sprites[1], (self.largura, self.altura))
             if self.andando is True:
                 self.rect.y += self.movimento
 
@@ -118,21 +119,21 @@ class Jogador(pygame.sprite.Sprite):
                 tempoTotal = int(tempoSolta - self.tempoAperta)
                 print(tempoTotal)
                 if tempoTotal < 1 and self.puloDelay <= 2:
-                    self.pulo = 2
+                    self.pulo = 4
                     self.puloDelay += 1
                 elif 3 > tempoTotal >= 1:
-                    self.pulo = 3
+                    self.pulo = 6
                 elif tempoTotal >= 3:
-                    self.pulo = 4
+                    self.pulo = 8
 
                 if self.select == 1:
-                    self.rect.y -= self.pulo*self.movimento*5
+                    self.rect.y -= self.pulo*self.movimento
                 elif self.select == 2:
-                    self.rect.y += self.pulo*self.movimento*5
+                    self.rect.y += self.pulo*self.movimento
                 elif self.select == 3:
-                    self.rect.x -= self.pulo*self.movimento*5
+                    self.rect.x -= self.pulo*self.movimento
                 elif self.select == 4:
-                    self.rect.x += self.pulo*self.movimento*5
+                    self.rect.x += self.pulo*self.movimento
 
                 self.andando = True
                 self.pulo = 0

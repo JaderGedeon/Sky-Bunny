@@ -1,21 +1,17 @@
 import pygame, math, random
 
 class Charger(pygame.sprite.Sprite):
-    def __init__(self, coelho, x, y,idIlha):
+    def __init__(self, coelho, x, y,idIlha, sprites):
         pygame.sprite.Sprite.__init__(self)
-        self.cor = (40, 140, 60)
         self.x = x
         self.y = y
         self.coelhoX = 0
         self.coelhoY = 0
-        self.altura = 24
-        self.largura = 24
+        self.altura = 88
+        self.largura = 88
         self.movimento = 16
-        self.knockback = 64
-
-        self.direcao = [1, 2, 3, 4]
-        self.selectX = 0
-        self.selectY = 0
+        self.knockback = 80
+        self.sprites = sprites
 
         self.angulo = 0
 
@@ -31,8 +27,7 @@ class Charger(pygame.sprite.Sprite):
     # ======================================================================================
 
     def desenho(self):
-        self.image = pygame.Surface((self.largura, self.altura))
-        self.image.fill(self.cor)
+        self.image = pygame.transform.scale(self.sprites[1], (self.largura, self.altura))
         self.rect = self.image.get_rect()
         self.rect.x = self.x
         self.rect.y = self.y
@@ -65,15 +60,13 @@ class Charger(pygame.sprite.Sprite):
             self.andando = False
         if self.andando is True:
             if self.rect.x < self.coelhoX:
-                self.selectX = self.direcao[0]
                 self.rect.x -= self.movimento*math.cos(self.angulo)
             if self.rect.x > self.coelhoX:
-                self.selectX = self.direcao[1]
                 self.rect.x -= self.movimento * math.cos(self.angulo)
 
             if self.rect.y < self.coelhoY:
-                self.selectY = self.direcao[2]
+                pygame.transform.scale(self.sprites[0], (self.largura, self.altura))
                 self.rect.y -= self.movimento*math.sin(self.angulo)
             if self.rect.y > self.coelhoY:
-                self.selectY = self.direcao[3]
+                pygame.transform.scale(self.sprites[1], (self.largura, self.altura))
                 self.rect.y -= self.movimento*math.sin(self.angulo)

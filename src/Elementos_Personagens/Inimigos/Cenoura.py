@@ -1,17 +1,17 @@
 import pygame, math
 
 class Cenoura(pygame.sprite.Sprite):
-    def __init__(self, coelho,x,y,idIlha):
+    def __init__(self, coelho,x,y,idIlha, sprites):
         pygame.sprite.Sprite.__init__(self)
-        self.cor = (118, 0, 0)
         self.x = x
         self.y = y
-        self.altura = 16
-        self.largura = 16
+        self.altura = 48
+        self.largura = 48
         self.movimento = 8
         self.rangeMax = 64
-        self.knockback = 16
+        self.knockback = 32
         self.angulo = 0
+        self.sprites = sprites
 
         self.desenho()
 
@@ -26,8 +26,7 @@ class Cenoura(pygame.sprite.Sprite):
     # ======================================================================================
 
     def desenho(self):
-        self.image = pygame.Surface((self.largura, self.altura))
-        self.image.fill(self.cor)
+        self.image = pygame.transform.scale(self.sprites[1], (self.largura, self.altura))
         self.rect = self.image.get_rect()
         self.rect.x = self.x
         self.rect.y = self.y

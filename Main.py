@@ -17,12 +17,17 @@ import src.GeradorDeMapa as MG
 import src.Menus as MN
 import src.Pontuador as PN
 import pygame as pg
+from os import path
 import sys
 import random
 
 from src.Elementos_Personagens.Elementos import Personagens
 
 pg.init()
+
+diretorioImg = path.join(path.dirname(__file__), 'Sprites')
+
+spriteInit = pg.image.load(path.join(diretorioImg, "SkyBunny_Back.png"))
 
 tamanhoTela = {'x': 1280,
                'y': 720
@@ -36,7 +41,7 @@ x = tamanhoTela['x']/2
 y = tamanhoTela['y']/2
 hit = False
 
-elementos: Personagens = Elementos.Personagens(x, y)
+elementos: Personagens = Elementos.Personagens(x, y, diretorioImg)
 
 
 grade = MG.MapGenerator(80,110,screen, elementos)
@@ -96,6 +101,7 @@ diferençatempo = 0
 volume = 0.5
 pg.mixer.init()
 pg.mixer.music.load('musica/skyloop.wav')
+#pg.mixer.music.load('musica/Música2.wav')
 pg.mixer.music.play(loops=-1, start=0.0)
 pg.mixer.music.set_volume(volume)
 
@@ -173,7 +179,7 @@ def reiniciarPartida():
     elementos.cenourinhas.empty()
     elementos.coletaveis.empty()
 
-    elementos.coelho.__init__(tamanhoTela['x'],tamanhoTela['y'])
+    #elementos.coelho.__init__(tamanhoTela['x'],tamanhoTela['y'], spriteInit)
 
     fases = 0
     pontuacao = 1000
