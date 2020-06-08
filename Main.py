@@ -25,7 +25,7 @@ from src.Elementos_Personagens.Elementos import Personagens
 
 pg.init()
 
-diretorioImg = path.join(path.dirname(__file__), 'Sprites')
+diretorioImg = path.join(path.dirname(__file__), 'SpritesRefatorados')
 
 spriteInit = pg.image.load(path.join(diretorioImg, "SkyBunny_Back.png"))
 
@@ -230,6 +230,7 @@ def reiniciarFase():
         elementos.coelho.hp = 3
 
         elementos.coelho.stun = False
+        elementos.coelho.stunTimer = 0
         elementos.coelho.pulo = 0
         elementos.coelho.puloDelay = 0
 
@@ -476,9 +477,12 @@ while JogoAtivo:
 
         screen.blit(elementos.coelho.image,(elementos.coelho.rect.x-int(CameraX),elementos.coelho.rect.y-int(CameraY)))
 
+        image = pg.Surface((elementos.coelho.largura, elementos.coelho.altura))
+        image.fill((255,255,255))
+        retangulo = image.get_rect()
 
         hit = False #                                grade.grupoTiles
-        hit = pg.sprite.spritecollide(elementos.coelho,tilesDaTela, False)
+        hit = pg.sprite.spritecollide(image,tilesDaTela, False) #elementos.coelho
         if not hit:
             elementos.coelho.vidas -= 1
 

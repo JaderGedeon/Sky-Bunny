@@ -7,8 +7,8 @@ class Charger(pygame.sprite.Sprite):
         self.y = y
         self.coelhoX = 0
         self.coelhoY = 0
-        self.altura = 88
-        self.largura = 88
+        self.altura = 43
+        self.largura = 34
         self.movimento = 16
         self.knockback = 80
         self.sprites = sprites
@@ -27,7 +27,7 @@ class Charger(pygame.sprite.Sprite):
     # ======================================================================================
 
     def desenho(self):
-        self.image = pygame.transform.scale(self.sprites[1], (self.largura, self.altura))
+        self.image = pygame.transform.scale(self.sprites[1], (self.largura*3, self.altura*3))
         self.rect = self.image.get_rect()
         self.rect.x = self.x
         self.rect.y = self.y

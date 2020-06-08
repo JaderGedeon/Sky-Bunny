@@ -3,8 +3,8 @@ import pygame, math
 class Teia(pygame.sprite.Sprite):
     def __init__(self, coelho, cenourideo, sprite):
         pygame.sprite.Sprite.__init__(self)
-        self.largura = 16
-        self.altura = 16
+        self.largura = 17
+        self.altura = 17
         self.movimento = 12
         self.rangeMax = 100
         self.angulo = 0
@@ -24,7 +24,7 @@ class Teia(pygame.sprite.Sprite):
         self.tiroCD = pygame.USEREVENT + 6
 
     def desenho(self):
-        self.image = pygame.transform.scale(self.sprite, (self.largura, self.altura))
+        self.image = pygame.transform.scale(self.sprite, (self.largura*2, self.altura*2))
         self.rect = self.image.get_rect()
         self.rect.x = self.cenourideo.rect.x + self.largura/2
         self.rect.y = self.cenourideo.rect.y + self.altura/2

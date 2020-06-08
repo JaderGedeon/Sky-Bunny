@@ -5,10 +5,10 @@ class Cenoura(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.x = x
         self.y = y
-        self.altura = 48
-        self.largura = 48
+        self.altura = 25
+        self.largura = 19
         self.movimento = 8
-        self.rangeMax = 64
+        self.rangeMax = 128
         self.knockback = 32
         self.angulo = 0
         self.sprites = sprites
@@ -26,7 +26,7 @@ class Cenoura(pygame.sprite.Sprite):
     # ======================================================================================
 
     def desenho(self):
-        self.image = pygame.transform.scale(self.sprites[1], (self.largura, self.altura))
+        self.image = pygame.transform.scale(self.sprites[1], (self.largura*2, self.altura*2))
         self.rect = self.image.get_rect()
         self.rect.x = self.x
         self.rect.y = self.y

@@ -7,8 +7,8 @@ class Jogador(pygame.sprite.Sprite):
     def __init__(self, x, y, sprites):
         pygame.sprite.Sprite.__init__(self) # Inicialização do Sprite
         # Definição do sprite, tamanho e movimentação
-        self.altura = 64
-        self.largura = 64
+        self.altura = 31
+        self.largura = 17
         self.movimento = 16
         self.stunTimer = 30
         self.direcao = [1, 2, 3, 4]
@@ -38,7 +38,7 @@ class Jogador(pygame.sprite.Sprite):
 
     # Função de desenho
     def desenho(self, x, y):
-        self.image = pygame.transform.scale(self.sprites[0], (self.largura, self.altura))
+        self.image = pygame.transform.scale(self.sprites[0], (self.largura*2, self.altura*2))
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
@@ -64,13 +64,13 @@ class Jogador(pygame.sprite.Sprite):
 
         if tecla[pygame.K_UP]:
             self.select = self.direcao[0]
-            self.image = pygame.transform.scale(self.sprites[0], (self.largura, self.altura))
+            self.image = pygame.transform.scale(self.sprites[0], (self.largura*2, self.altura*2))
             if self.andando is True:
                 self.rect.y -= self.movimento
 
         if tecla[pygame.K_DOWN]:
             self.select = self.direcao[1]
-            self.image = pygame.transform.scale(self.sprites[1], (self.largura, self.altura))
+            self.image = pygame.transform.scale(self.sprites[1], (self.largura*2, self.altura*2))
             if self.andando is True:
                 self.rect.y += self.movimento
 

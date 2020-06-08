@@ -7,8 +7,8 @@ class Cenourideo(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.x = x
         self.y = y
-        self.altura = 64
-        self.largura = 80
+        self.altura = 19
+        self.largura = 37
         self.movimento = 8
         self.knockback = 16
         self.angulo = 0
@@ -27,7 +27,7 @@ class Cenourideo(pygame.sprite.Sprite):
         self.ativo = True
 
     def desenho(self):
-        self.image = pygame.transform.scale(self.sprites[1], (self.largura, self.altura))
+        self.image = pygame.transform.scale(self.sprites[1], (self.largura*2, self.altura*2))
         self.rect = self.image.get_rect()
         self.rect.x = self.x
         self.rect.y = self.y
