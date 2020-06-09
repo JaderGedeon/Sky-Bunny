@@ -449,6 +449,9 @@ while JogoAtivo:
         CameraX = elementos.coelho.rect.x-tamanhoTela['x']/2
         CameraY = elementos.coelho.rect.y-tamanhoTela['y']/2
 
+        elementos.coelho.hitbox.rect.x = elementos.coelho.rect.x
+        elementos.coelho.hitbox.rect.y = elementos.coelho.rect.y
+
         try:
             for i in range(int((CameraY)/64),int((CameraY+784)/64)):
                 for j in range(int((CameraX) / 64), int((CameraX + 1344) / 64)):
@@ -478,7 +481,7 @@ while JogoAtivo:
 
 
         hit = False #                                grade.grupoTiles
-        hit = pg.sprite.spritecollide(elementos.coelho,tilesDaTela, False)
+        hit = pg.sprite.spritecollide(elementos.coelho.hitbox,tilesDaTela, False)
         if not hit:
             elementos.coelho.vidas -= 1
 
