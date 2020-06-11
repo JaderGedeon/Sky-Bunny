@@ -8,6 +8,8 @@ _com controles de Atari, entre na pele do saltitante Sky Bunny enquanto adentra 
 _ruínas celestes, esquivando-se de armadilha, fugindo de criaturas robóticas e_
 _coletando cenouras._
 
+<br>
+
 
 ## Updates futuros
 ### Arte:
