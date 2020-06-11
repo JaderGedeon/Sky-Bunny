@@ -20,11 +20,12 @@ class Menus:
             TexturaUI(0, "Background", pg.transform.scale(pg.image.load("texturas/interfaces/Fundo_Menu.png"), (323*4, 208*4))),
 
             TexturaUI(1, "MenuInicial", [self.carregarImagem("texturas/interfaces/StartOff.png"),self.carregarImagem("texturas/interfaces/StartOn.png")]),
-            TexturaUI(2, "MenuInicial", [self.carregarImagem("texturas/interfaces/LoadOff.png"),self.carregarImagem("texturas/interfaces/LoadOn.png")]),
-            TexturaUI(3, "MenuInicial", [self.carregarImagem("texturas/interfaces/Options.png"),self.carregarImagem("texturas/interfaces/OptionsOn.png")]),
-            TexturaUI(4, "MenuInicial", [self.carregarImagem("texturas/interfaces/Rank.png"), self.carregarImagem("texturas/interfaces/RankOn.png")]),
-            TexturaUI(5, "MenuInicial", [self.carregarImagem("texturas/interfaces/Quit.png"), self.carregarImagem("texturas/interfaces/QuitOn.png")]),
 
+            TexturaUI(2, "MenuInicial", [self.carregarImagem("texturas/interfaces/Options.png"),self.carregarImagem("texturas/interfaces/OptionsOn.png")]),
+            TexturaUI(3, "MenuInicial", [self.carregarImagem("texturas/interfaces/Rank.png"), self.carregarImagem("texturas/interfaces/RankOn.png")]),
+            TexturaUI(4, "MenuInicial", [self.carregarImagem("texturas/interfaces/Quit.png"), self.carregarImagem("texturas/interfaces/QuitOn.png")]),
+            TexturaUI(5, "MenuInicial",
+                      [pg.transform.scale(pg.image.load("texturas/interfaces/TituloCerto.png"), (126 * 4, 32 * 4))]),
             #TexturaUI(1, "MenuFase", [self.carregarImagem(""), self.carregarImagem("")]),
             #TexturaUI(2, "MenuFase", [self.carregarImagem(""), self.carregarImagem("")]),
 
@@ -51,6 +52,8 @@ class Menus:
         self.listaDeTexturasHUD = [
             TexturaUI(1, "GameHud", [pg.transform.scale(pg.image.load("texturas/interfaces/RankTable.png"), (60 * 4, 19 * 4))]),
             TexturaUI(2, "GameHud", [pg.transform.scale(pg.image.load("texturas/interfaces/Coracao.png"), (16 * 4, 15 * 4))]),
+            TexturaUI(3, "GameHud", [pg.transform.scale(pg.image.load("texturas/interfaces/hudpulo.png"), (240 * 3, 22 * 3))]),
+            TexturaUI(4, "GameHud", [pg.transform.scale(pg.image.load("texturas/interfaces/pulo.png"), (54 * 3, 16 * 3))]),
             ]
 
         self.dicionarioLetras = {1: "A",
@@ -97,10 +100,14 @@ class Menus:
         for UI in self.listaDeTexturas:
             if UI.tipoTextura == "MenuInicial":
                 if index == UI.idTextura:
-                    tela.blit(UI.caminhoTextura[1], (250, 120 + (75 * ordenador)))
+                    tela.blit(UI.caminhoTextura[1], (470, 251 + (75 * ordenador)))
+                    ordenador += 1
                 else:
-                    tela.blit(UI.caminhoTextura[0], (250, 120 + (75 * ordenador)))
-                ordenador += 1
+                    if UI.idTextura == 5:
+                        tela.blit(UI.caminhoTextura[0], (346, 145))
+                    else:
+                        tela.blit(UI.caminhoTextura[0], (470, 251 + (75 * ordenador)))
+                        ordenador += 1
 
     def menuOpções(self, tela, index, volume):
         tela.blit(self.listaDeTexturas[0].caminhoTextura, (-10,-50))
@@ -219,7 +226,7 @@ class Menus:
                         tela.blit(self.font2.render(rank[1], True, (117, 43, 0)), (660, 240 + (54 * contador)))
                         contador+=1
 
-    def gameHUD(self, tela,painelPontuação,coelho):
+    def gameHUD(self, tela,painelPontuação,coelho,tempo):
 
         ArrayPontos = []
 
@@ -245,6 +252,16 @@ class Menus:
             if HUD.idTextura == 2:
                 for vida in range(coelho.hp):
                     tela.blit(HUD.caminhoTextura[0], (-40+(50*contador), 10))
+                    contador += 1
+            if HUD.idTextura == 3:
+                tela.blit(HUD.caminhoTextura[0], (640-360, 621))
+            contador = 1
+            if HUD.idTextura == 4:
+                tempoAmostral = tempo
+                if tempo > 4:
+                    tempoAmostral = 4
+                for vida in range(tempoAmostral):
+                    tela.blit(HUD.caminhoTextura[0], (109+(180*contador), 630))
                     contador += 1
 
     def gameTransicao(self, tela, coelho):

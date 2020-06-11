@@ -7,8 +7,8 @@ class Cenoura(pygame.sprite.Sprite):
         self.y = y
         self.altura = 25
         self.largura = 19
-        self.movimento = 8
-        self.rangeMax = 128
+        self.movimento = 4
+        self.rangeMax = 160
         self.knockback = 32
         self.angulo = 0
         self.sprites = sprites
@@ -40,7 +40,7 @@ class Cenoura(pygame.sprite.Sprite):
 
     def ativacaoEvento(self, evento):
         global coelho
-        if evento.type == self.ativoEvento:
+        if evento.type == self.ativoEvento and self.ativo == False:
 
             distancia = ((self.coelho.rect.x - self.rect.x), (self.coelho.rect.y - self.rect.y))
 
@@ -70,5 +70,7 @@ class Cenoura(pygame.sprite.Sprite):
 
                 if self.rect.y < self.coelho.rect.y:
                     self.rect.y -= self.movimento*math.sin(self.angulo)
+                    self.image = pygame.transform.scale(self.sprites[1], (self.largura * 2, self.altura * 2))
                 if self.rect.y > self.coelho.rect.y:
                     self.rect.y -= self.movimento*math.sin(self.angulo)
+                    self.image = pygame.transform.scale(self.sprites[0], (self.largura * 2, self.altura * 2))

@@ -55,10 +55,10 @@ class Cenourideo(pygame.sprite.Sprite):
                 self.rect.x -= self.movimento*math.cos(self.angulo)
 
             if self.rect.y < self.coelho.rect.y:
-                pygame.transform.scale(self.sprites[0], (self.largura, self.altura))
+                self.image = pygame.transform.scale(self.sprites[1], (self.largura*2, self.altura*2))
                 self.rect.y -= self.movimento*math.sin(self.angulo)
             if self.rect.y > self.coelho.rect.y:
-                pygame.transform.scale(self.sprites[1], (self.largura, self.altura))
+                self.image = pygame.transform.scale(self.sprites[0], (self.largura * 2, self.altura * 2))
                 self.rect.y -= self.movimento*math.sin(self.angulo)
         if self.andando is True:
             self.tirosCount = 0

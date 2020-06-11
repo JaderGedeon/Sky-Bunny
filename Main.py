@@ -44,7 +44,7 @@ hit = False
 elementos: Personagens = Elementos.Personagens(x, y, diretorioImg)
 
 
-grade = MG.MapGenerator(80,110,screen, elementos)
+grade = MG.MapGenerator(80,110,screen, elementos,1)
 grade.inicializarIlhas()
 grade.popularMapa()
 grade.texturizarMapa()
@@ -68,6 +68,9 @@ tempo = 0
 tempoInicial = 0
 tempoDiferencial = 0
 tempoTransicao = 0
+
+tempoPulo = 0
+tempoDePulo = 0
 
 JogoAtivo = True
 transicao = False
@@ -187,7 +190,7 @@ def reiniciarPartida():
     tempoInicial = pg.time.get_ticks()
 
 
-    grade.reiniciarMapa()
+    grade.reiniciarMapa(fases)
     Desenhar()
 
     for sprite in grade.grupoTiles:
@@ -195,6 +198,9 @@ def reiniciarPartida():
     for portal in grade.gruposDeSprite["PortalDesativado"]:
         elementos.coelho.rect.x = portal.rect.x + 24
         elementos.coelho.rect.y = portal.rect.y - 24
+
+    elementos.coelho.hp = 3
+    elementos.coelho.morreu = False
 
     elementos.coelho.dashTimer()
     for sprites in elementos.chargers:
@@ -222,21 +228,30 @@ def reiniciarFase():
         elementos.cenourinhas.empty()
         elementos.coletaveis.empty()
 
-        grade.reiniciarMapa()
+        grade.reiniciarMapa(fases)
         Desenhar()
 
         trocarMenu("Jogo")
-
-        elementos.coelho.hp = 3
 
         elementos.coelho.stun = False
         elementos.coelho.stunTimer = 0
         elementos.coelho.pulo = 0
         elementos.coelho.puloDelay = 0
+        elementos.coelho.morreu = False
 
         for portal in grade.gruposDeSprite["PortalDesativado"]:
             elementos.coelho.rect.x = portal.rect.x + 24
             elementos.coelho.rect.y = portal.rect.y - 24
+
+        elementos.coelho.dashTimer()
+        for sprites in elementos.chargers:
+            sprites.investidaTimer()
+        for sprites in elementos.cenouras:
+            sprites.ativacaoTimer()
+        for sprites in elementos.tirosSprite:
+            sprites.tiroTimer()
+
+        elementos.coelho.hp = 3
 
     else:
         pontuacao += 1000
@@ -285,13 +300,13 @@ while JogoAtivo:
                     # Baixo direita
                     if event.key == pg.K_DOWN or event.key == pg.K_RIGHT:
                         contadorIndexMenu += 1
-                        if contadorIndexMenu > 5:
+                        if contadorIndexMenu > 4:
                             contadorIndexMenu = 1
                     # Cima esquerda
                     if event.key == pg.K_UP or event.key == pg.K_LEFT:
                         contadorIndexMenu -= 1
                         if contadorIndexMenu < 1:
-                            contadorIndexMenu = 5
+                            contadorIndexMenu = 4
 
                     # Escolha de menu
                     if event.key == pg.K_SPACE:
@@ -300,23 +315,18 @@ while JogoAtivo:
                         if contadorIndexMenu == 1:
                             telaTransicao(0,"Partida")
 
-
-                        # Load
-                        if contadorIndexMenu == 2:
-                            screen.fill((0, 0, 0))
-
                         # Options
-                        if contadorIndexMenu == 3:
+                        if contadorIndexMenu == 2:
                             diferençatempo = tempo
                             trocarMenu("Opções")
 
                         # Rank
-                        if contadorIndexMenu == 4:
+                        if contadorIndexMenu == 3:
                             diferençatempo = tempo
                             trocarMenu("Ranking")
 
                         #Sai do jogo
-                        if contadorIndexMenu == 5:
+                        if contadorIndexMenu == 4:
                             JogoAtivo = False
 
             if  indexTelas["Opções"] == True:
@@ -419,6 +429,8 @@ while JogoAtivo:
 
         if event.type == pg.QUIT:  # If user clicked close
             JogoAtivo = False  # Flag that we are done so we exit this loop
+
+        '''
         if event.type == pg.KEYDOWN:
             if event.key == pg.K_h:
                 grade.reiniciarMapa()
@@ -430,6 +442,7 @@ while JogoAtivo:
                 trocarMenu("AdicionarRanking")
             if event.key == pg.K_p:
                 pontuacao += 40
+        '''
 
         if indexTelas["Jogo"] == True:
             elementos.coelho.dashEvento(event)
@@ -460,6 +473,13 @@ while JogoAtivo:
             pass
 
     # =================================
+        if elementos.coelho.prepPulo == True:
+            tempoPulo = int((pg.time.get_ticks() - tempoDePulo) / 1000)
+        else:
+            tempoDePulo = pg.time.get_ticks()
+            tempoPulo = 0
+
+
 
         Movimento()
         DeteccaoDeDano()
@@ -475,14 +495,14 @@ while JogoAtivo:
         for tiro in elementos.tirosSprite:
             screen.blit(tiro.image, (tiro.rect.x - int(CameraX), tiro.rect.y - int(CameraY)))
 
-        screen.blit(elementos.coelho.image,(elementos.coelho.rect.x-int(CameraX),elementos.coelho.rect.y-int(CameraY)))
+        elementos.hitbox.rect.x = elementos.coelho.rect.x
+        elementos.hitbox.rect.y = elementos.coelho.rect.y + 40
 
-        image = pg.Surface((elementos.coelho.largura, elementos.coelho.altura))
-        image.fill((255,255,255))
-        retangulo = image.get_rect()
+        screen.blit(elementos.coelho.image,(elementos.coelho.rect.x-int(CameraX),elementos.coelho.rect.y-int(CameraY)))
+        #screen.blit(elementos.hitbox.image,(elementos.coelho.rect.x-int(CameraX),elementos.coelho.rect.y-int(CameraY)+40))
 
         hit = False #                                grade.grupoTiles
-        hit = pg.sprite.spritecollide(image,tilesDaTela, False) #elementos.coelho
+        hit = pg.sprite.spritecollide(elementos.coelho.hitbox,tilesDaTela, False) #elementos.coelho
         if not hit:
             elementos.coelho.vidas -= 1
 
@@ -492,16 +512,16 @@ while JogoAtivo:
             elementos.coelho.qualIlha = -1
 
 
-        coletou = pg.sprite.spritecollide(elementos.coelho,elementos.cenourinhas,True)
+        coletou = pg.sprite.spritecollide(elementos.coelho, elementos.cenourinhas,True)
         if coletou:
-            pontuacao += 50
+            pontuacao += 100
 
 
         teleportando = False
         teleportando = pg.sprite.spritecollide(elementos.coelho, grade.gruposDeSprite["PortalAtivo"], False)
         if teleportando:
             fases += 1
-            pontuacao += 100
+            pontuacao += 500
             telaTransicao(0, "Fase")
 
 
@@ -520,7 +540,7 @@ while JogoAtivo:
             elif pontuacao < 0:
                 pontuacao = 0
 
-        UI.gameHUD(screen,pontuacao,elementos.coelho)
+        UI.gameHUD(screen,pontuacao,elementos.coelho,tempoPulo)
 
         if vidaAtual != elementos.coelho.vidas:
             vidaAtual = elementos.coelho.vidas

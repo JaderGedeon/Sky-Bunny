@@ -46,11 +46,12 @@ class MapGenerator:
         "comprimento": 15, #Fica em 0, tá aqui para caso precisarmos fazer alguma mudança
     }
 
-    def __init__(self, comprimento, altura,screen, elementos):
+    def __init__(self, comprimento, altura,screen, elementos,fase):
         self.comprimento = comprimento
         self.altura = altura
         self.screen = screen
         self.elementos = elementos
+        self.fase = fase
 
         self.texturizador = TexturesInfo.TexturasMapa(screen)
 
@@ -349,7 +350,8 @@ class MapGenerator:
         self.povoarInimigos()
 
 
-    def reiniciarMapa(self):
+    def reiniciarMapa(self,fases):
+        self.fase = fases
         self.mapa = [[TileInfo.Tile(None,"","",0,0,0) for x in range(self.comprimento)] for y in range(self.altura)]
         MapGenerator.popularMapa(self)
         for grupo in self.gruposDeSprite:
@@ -360,7 +362,7 @@ class MapGenerator:
 
         for conjIlhas in self.conjuntoIlhas:
             if conjIlhas[0].idIlha > 2:
-                pesoIlha = random.randint(15, 20)
+                pesoIlha = (random.randint(5, 6)) * (self.fase+1)
                 chanceCenoura = random.randint(1,4)
 
                 while pesoIlha != 0:
