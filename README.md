@@ -41,8 +41,6 @@ _coletando cenouras._
 
 
 ## Equipe
-<br>
-
 Jader Gedeon - (Programação/UI/Cenário) - jadergedeon@gmail.com
 
 Pedro Henrique - (Programação/IA/Arte) - pedsueiro@gmail.com
