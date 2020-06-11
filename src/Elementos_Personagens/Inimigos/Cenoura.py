@@ -1,17 +1,17 @@
 import pygame, math
 
 class Cenoura(pygame.sprite.Sprite):
-    def __init__(self, coelho,x,y,idIlha):
+    def __init__(self, coelho,x,y,idIlha, sprites):
         pygame.sprite.Sprite.__init__(self)
-        self.cor = (255, 0, 0)
         self.x = x
         self.y = y
-        self.altura = 16
-        self.largura = 16
-        self.movimento = 8
-        self.rangeMax = 64
-        self.knockback = 16
+        self.altura = 25
+        self.largura = 19
+        self.movimento = 4
+        self.rangeMax = 160
+        self.knockback = 32
         self.angulo = 0
+        self.sprites = sprites
 
         self.desenho()
 
@@ -26,8 +26,7 @@ class Cenoura(pygame.sprite.Sprite):
     # ======================================================================================
 
     def desenho(self):
-        self.image = pygame.Surface((self.largura, self.altura))
-        self.image.fill(self.cor)
+        self.image = pygame.transform.scale(self.sprites[1], (self.largura*2, self.altura*2))
         self.rect = self.image.get_rect()
         self.rect.x = self.x
         self.rect.y = self.y
@@ -41,14 +40,14 @@ class Cenoura(pygame.sprite.Sprite):
 
     def ativacaoEvento(self, evento):
         global coelho
-        if evento.type == self.ativoEvento:
+        if evento.type == self.ativoEvento and self.ativo == False:
 
             distancia = ((self.coelho.rect.x - self.rect.x), (self.coelho.rect.y - self.rect.y))
 
             if - distancia[0] < self.rangeMax > distancia[0]:
                 if - distancia[1] < self.rangeMax > distancia[1]:
                     self.ativo = True
-                    self.cor = (128, 128, 0)
+                    self.cor = (255, 0, 0)
                     self.desenho()
 
     # ======================================================================================
@@ -70,6 +69,8 @@ class Cenoura(pygame.sprite.Sprite):
                     self.rect.x -= self.movimento*math.cos(self.angulo)
 
                 if self.rect.y < self.coelho.rect.y:
-                    self.rect.y -= self.movimento*math.cos(self.angulo)
+                    self.rect.y -= self.movimento*math.sin(self.angulo)
+                    self.image = pygame.transform.scale(self.sprites[1], (self.largura * 2, self.altura * 2))
                 if self.rect.y > self.coelho.rect.y:
-                    self.rect.y -= self.movimento*math.cos(self.angulo)
+                    self.rect.y -= self.movimento*math.sin(self.angulo)
+                    self.image = pygame.transform.scale(self.sprites[0], (self.largura * 2, self.altura * 2))
