@@ -47,14 +47,13 @@ Jader Gedeon - (Programação/UI/Cenário) - jadergedeon@gmail.com
 
 Pedro Henrique - (Programação/IA/Arte) - pedsueiro@gmail.com
 
-	
 ## Download
 
-**Link**: https://drive.google.com/file/d/16udkGOjdunlDrpn9q5_WIi-kQx933z__/view?usp=sharing
+https://drive.google.com/file/d/16udkGOjdunlDrpn9q5_WIi-kQx933z__/view?usp=sharing
 <br/>
 
 
-##### Links 
+### Links Externos
 Background music (Sky-Loop) by FoolBoyMedia is licensed under (CC BY-NC 3.0)
 
 Music:https://freesound.org/people/FoolBoyMedia/sounds/264295/
