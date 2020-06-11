@@ -11,6 +11,18 @@
 *Refatorar o código inteiro (Sério, temos que fazer isso)
 
 
+Notas:
+	Pulo ser animado e com som
+	Feedback do pulo (carregar e tb aterrisar)
+	Parallax de fundo
+	SFX
+	Equilíbro de pulo
+	Margem de pulo
+	
+	Feedbacks
+	Ajustes de gameplay
+
+
 
 == Links ==
 
