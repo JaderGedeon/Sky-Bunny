@@ -45,6 +45,9 @@ Jader Gedeon - (Programação/UI/Cenário) - jadergedeon@gmail.com
 
 Pedro Henrique - (Programação/IA/Arte) - pedsueiro@gmail.com
 
+<br>
+
+
 ## Download
 
 https://drive.google.com/file/d/16udkGOjdunlDrpn9q5_WIi-kQx933z__/view?usp=sharing
